@@ -71,9 +71,9 @@
     [Socios de la flota. Modalidad vehicular, modelo, año, tasa de aceptación, servicios acumulados de mantenimiento, costo de taller y horas de inactividad.],
 
     [`dim_campaigns`],
-    [Dimensión Prescriptiva],
+    [Dimensión de Contexto],
     [`sk_campaign` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
-    [Optimización \ #text(size: raw-size, fill: rgb("#64748b"))[Mochila 0/1]],
+    [Análisis de Oferta \ #text(size: raw-size, fill: rgb("#64748b"))[Incentivos y Cobertura]],
     [#total-campaigns programas de bonos. Costo presupuestario en córdobas (NIO), incremento en horas de conexión proyectadas y zona urbana objetivo.]
   )
 }

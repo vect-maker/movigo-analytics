@@ -10,7 +10,7 @@ La presente investigación se fundamenta en la necesidad operativa de sustituir 
 A partir del análisis de los *77,487 registros históricos de viajes* y las series meteorológicas expuestas a través de la API REST, este proyecto aporta beneficios concretos a la gestión empresarial de MoviGo:
 - *Mitigación de Ingresos Perdidos por Cancelación:* Identifica los umbrales críticos del multiplicador dinámico a partir de los cuales la probabilidad de cancelación por parte del usuario se dispara, cuantificando el costo de las cotizaciones perdidas.
 - *Reducción del Desabastecimiento en Horas Pico:* Diagnostica las brechas de oferta en los corredores más saturados de Managua, determinando cuándo la tarifa regular resulta insuficiente para activar la conexión de conductores.
-- *Optimización de Presupuestos Operativos:* Provee un marco riguroso para asignar los fondos destinados a programas de incentivos para socios conductores, sustituyendo el aumento ciego de tarifas por subsidios orientados a objetivos medibles de conexión.
+- *Optimización Prescriptiva de Trayectorias y Ruteo de Viajes:* Provee un marco cuantitativo para guiar los traslados a través de caminos de mínima impedancia, mitigando los tiempos muertos y neutralizando las demoras ocasionadas por corredores viales colapsados o inundados.
 
 == Relevancia Científica y Metodológica: Optimización Espacial y Modelado en Grafos
 
