@@ -32,8 +32,12 @@ from pathlib import Path
 from typing import Any
 
 import duckdb
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
+from matplotlib.lines import Line2D
 import networkx as nx
 import numpy as np
 from PIL import Image
@@ -95,7 +99,11 @@ def load_analytical_data(db_path: Path) -> tuple[dict[int, dict], dict[int, dict
                    cast((q.lon_min + q.lon_max)/2 as double) as lon,
                    q.mean_altitude_masl, q.flood_risk, q.main_drainage_channels,
                    coalesce(w.flood_hours, 0) as flood_hours,
-                   coalesce(w.avg_congestion, 1.12) as avg_congestion
+                   coalesce(w.avg_congestion, 1.12) as avg_congestion,
+                   cast(q.lat_min as double) as lat_min,
+                   cast(q.lat_max as double) as lat_max,
+                   cast(q.lon_min as double) as lon_min,
+                   cast(q.lon_max as double) as lon_max
             FROM dim_quadrants q
             LEFT JOIN (
                 SELECT quadrant_id,
@@ -129,6 +137,10 @@ def load_analytical_data(db_path: Path) -> tuple[dict[int, dict], dict[int, dict
                 "cauce": cauce,
                 "flood_hours": flood_hrs,
                 "avg_congestion": float(r[12]),
+                "lat_min": float(r[13]),
+                "lat_max": float(r[14]),
+                "lon_min": float(r[15]),
+                "lon_max": float(r[16]),
                 "is_flood_barrier": is_flood_barrier,
             }
 
@@ -263,6 +275,10 @@ def build_spatial_grid_graph(quadrants: dict[int, dict]) -> nx.Graph:
             cauce=q["cauce"],
             flood_hours=q["flood_hours"],
             congestion=q["avg_congestion"],
+            lat_min=q["lat_min"],
+            lat_max=q["lat_max"],
+            lon_min=q["lon_min"],
+            lon_max=q["lon_max"],
             is_flood_barrier=q["is_flood_barrier"],
         )
 
@@ -678,35 +694,44 @@ def generate_topology_plot(
 
     pos = nx.get_node_attributes(G, "pos")
 
-    # 4. Partition nodes by flood risk & drainage barrier status
-    barrier_nodes = [n for n, d in G.nodes(data=True) if d["is_flood_barrier"]]
-    drained_nodes = [n for n, d in G.nodes(data=True) if not d["is_flood_barrier"]]
+    # 4. Render Spatial Quadrants with Continuous Flood Colormap (YlOrRd)
+    cmap = plt.get_cmap("YlOrRd")
+    norm = mcolors.Normalize(vmin=0, vmax=220)
 
-    nx.draw_networkx_nodes(
-        G,
-        pos,
-        nodelist=drained_nodes,
-        node_color="#0288d1",
-        node_size=32,
-        alpha=0.70,
-        edgecolors="#ffffff",
-        linewidths=0.5,
-        ax=ax,
-        label="Hubs de Cuadrante Drenados (278)",
-    )
+    for qid in G.nodes():
+        d = G.nodes[qid]
+        w = d["lon_max"] - d["lon_min"]
+        h_dim = d["lat_max"] - d["lat_min"]
+        hrs = d["flood_hours"]
 
-    nx.draw_networkx_nodes(
-        G,
-        pos,
-        nodelist=barrier_nodes,
-        node_color="#d32f2f",
-        node_size=80,
-        alpha=0.95,
-        edgecolors="#ffffff",
-        linewidths=1.0,
-        ax=ax,
-        label="Cuadrantes Críticos de Inundación (20)",
-    )
+        if hrs == 0:
+            rect = patches.Rectangle(
+                (d["lon_min"], d["lat_min"]),
+                w,
+                h_dim,
+                facecolor="#0288d1",
+                alpha=0.04,
+                edgecolor="#90a4ae",
+                linewidth=0.40,
+                linestyle=":",
+                zorder=2,
+            )
+        else:
+            rgba = cmap(norm(hrs))
+            alpha = 0.35 + 0.40 * (hrs / 220.0)
+            edge_rgba = cmap(min(1.0, norm(hrs) + 0.15))
+            rect = patches.Rectangle(
+                (d["lon_min"], d["lat_min"]),
+                w,
+                h_dim,
+                facecolor=rgba,
+                alpha=alpha,
+                edgecolor=edge_rgba,
+                linewidth=1.2 if hrs >= 100 else 0.75,
+                linestyle="-" if hrs >= 100 else "--",
+                zorder=2,
+            )
+        ax.add_patch(rect)
 
     # 5. Mark primary reference zone centroids with compact labels
     reference_zones = [8, 11, 9, 1, 3, 21]
@@ -738,13 +763,31 @@ def generate_topology_plot(
 
     ax.set_xlabel("Longitud Oeste (WGS84)", fontsize=9.5)
     ax.set_ylabel("Latitud Norte (WGS84)", fontsize=9.5)
+
+    # Colorbar for the annual flood exposure
+    sm = cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+    cbar = fig.colorbar(sm, ax=ax, fraction=0.030, pad=0.02, aspect=24)
+    cbar.set_label("Horas Anuales con Vías Inundadas (2024)", fontsize=8.8, fontweight="bold", labelpad=8)
+    cbar.set_ticks([0, 12, 36, 100, 150, 217])
+    cbar.ax.tick_params(labelsize=8.0)
+
+    legend_elements = [
+        Line2D([0], [0], color="#00838f", linewidth=1.8, label="Cauces y Canales de Drenaje (485 tramos)"),
+        Line2D([0], [0], color="#78909c", linewidth=1.0, alpha=0.7, label="Arterias Viales OpenStreetMap"),
+        patches.Patch(
+            facecolor="#0288d1", edgecolor="#90a4ae", alpha=0.10, linewidth=0.6, linestyle=":",
+            label="Cuadrantes Drenados (0 h de anegamiento)"
+        ),
+    ]
     ax.legend(
+        handles=legend_elements,
         loc="upper right",
         frameon=True,
         facecolor="white",
         edgecolor="#b0bec5",
         framealpha=0.96,
-        fontsize=8.5,
+        fontsize=8.0,
     )
     ax.grid(True, linestyle="--", alpha=0.35)
 

@@ -12,19 +12,17 @@ Sin embargo, en la práctica operacional de la plataforma *MoviGo* en el municip
 + *Sobredimensión del Multiplicador:* Si el algoritmo eleva la tarifa de forma desproporcionada ante un pico de demanda o una lluvia repentina, se sobrepasa la elasticidad-precio y la disposición a pagar de los usuarios, disparando la *tasa de cancelación por parte del usuario* y generando abandono de la plataforma @hall2015.
 + *Subestimación del Multiplicador:* Por el contrario, si la tarifa se mantiene baja o estática durante periodos de alta saturación vial, los conductores desocupados no encuentran incentivo económico suficiente para desplazarse hacia los puntos críticos. Esto genera una escasez prolongada de vehículos, tiempos excesivos de espera y una elevada *tasa de cancelación por parte del conductor*, quien rechaza atender traslados lejanos o poco remunerativos @castillo2017.
 
-El problema central no radica en la existencia de la tarifa dinámica, sino en la *ausencia de una calibración cuantitativa del multiplicador de equilibrio ($m^*$)* que iguale la oferta y la demanda sin generar externalidades operativas destructivas:
-
-$ f(m) = "Demanda"(m) - "Oferta"(m) = 0 $ <eq-exceso-demanda>
+El problema fundamental radica en que la plataforma utiliza la tarifa dinámica como un instrumento financiero ciego ante las restricciones espaciales del entorno: incrementar el multiplicador no descongestiona las vías ni disuelve las inundaciones pluviales. Al ignorar la geometría física de la red vial, el sistema impone sobrecostos a los pasajeros sin garantizar una mejora real en los tiempos de llegada, provocando un quiebre en la efectividad operativa de la plataforma.
 
 == Manifestación Territorial y Fricción Socioeconómica en Managua
 
 La complejidad del esquema tarifario se intensifica debido a la estructura urbana fragmentada y heterogénea de Managua. La plataforma opera sobre cuadrantes urbanos con marcadas asimetrías socioeconómicas:
 
-- *Zonas de estrato alto* (Villa Fontana, Santo Domingo, Las Colinas): con tarifas base de bajada de bandera elevadas (C\$ 70 a C\$ 80 NIO) y usuarios con predominio de pagos digitales y menor sensibilidad al precio.
-- *Zonas comerciales e institucionales* (Metrocentro, Plaza España, Eje Corporativo): que concentran flujos masivos de salida en horas pico vespertinas (17:00 a 18:59).
-- *Zonas populares y de comercio informal* (Mercado Oriental, Mercado Roberto Huembes, Ciudad Jardín): con tarifas base menores (C\$ 35 a C\$ 40 NIO), donde los usuarios dependen predominantemente del dinero en efectivo y exhiben una elasticidad-precio significativamente más alta.
+- *Zonas de estrato alto* (Villa Fontana, Santo Domingo, Las Colinas): con base fare elevado (C\$ 70 a C\$ 80 NIO) y usuarios con predominio de pagos digitales y menor sensibilidad al precio.
+- *Zonas comerciales e institucionales* (Metrocentro, Plaza España, Eje Corporativo): que concentran flujos masivos de salida en peak hours vespertinas (17:00 a 18:59).
+- *Zonas populares y de comercio informal* (Mercado Oriental, Mercado Roberto Huembes, Ciudad Jardín): con base fare menor (C\$ 35 a C\$ 40 NIO), donde los usuarios dependen predominantemente del dinero en efectivo y exhiben una elasticidad-precio significativamente más alta.
 
-Cuando el algoritmo de MoviGo aplica multiplicadores dinámicos agresivos ($1.80times$ a $2.80times$) sobre cuadrantes populares, el costo total del traslado se duplica o triplica súbitamente. Dado que muchos pasajeros en estas zonas disponen de un presupuesto estricto en efectivo al momento de la solicitud, el alza tarifaria desencadena cancelaciones inmediatas y exclusión socio-espacial, comprometiendo el rol social del transporte en la capital.
+Cuando el algoritmo de MoviGo aplica surge multipliers agresivos ($1.80times$ a $2.80times$) sobre cuadrantes populares o periféricos, el costo total del traslado se duplica o triplica súbitamente. Al combinarse con tiempos prolongados de espera y limitaciones de liquidez de los usuarios, el alza tarifaria desencadena cancelaciones inmediatas y exclusión socio-espacial, comprometiendo el rol de conectividad del transporte selectivo en la capital.
 
 == Perturbaciones Climáticas y Vulnerabilidad de la Operación
 
@@ -44,7 +42,7 @@ El problema radica en que el sistema de asignación de viajes no anticipa los cu
 
 == Dispersión Transaccional y Necesidad de un Enfoque de Ciencia de Datos
 
-Los datos que reflejan este fenómeno se encuentran fragmentados en endpoints de una *API REST pública*:
+Los datos que reflejan este fenómeno se encuentran fragmentados en endpoints de una *API REST desacoplada del entorno de simulación transaccional*:
 - Transacciones históricas y motivos de cancelación en `/movigo/viajes` (> 77,000 registros).
 - Pings de velocidad y estado operativo en `/movigo/telemetria` (> 19,000 pings).
 - Factores exógenos diarios de lluvia y tráfico en `/movigo/clima`.

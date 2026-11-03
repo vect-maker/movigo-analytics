@@ -27,7 +27,7 @@ La respuesta empírica de los pasajeros ante variaciones del multiplicador tarif
 
 Asimismo, #cite(<hall2015>, form: "prose") aportaron evidencia empírica directa sobre la tasa de abandono de los usuarios: cuando el multiplicador dinámico sobrepasa el umbral de tolerancia del consumidor, la probabilidad de que el viaje sea cancelado tras la cotización inicial se eleva de forma exponencial, desvirtuando el propósito del algoritmo regulador.
 
-En el caso de MoviGo, estos antecedentes justifican la necesidad de estimar empíricamente la elasticidad-precio zonal y aproximar el multiplicador de equilibrio que prevenga la pérdida de servicios sin desincentivar la oferta de conductores.
+Para la investigación sobre MoviGo, estos antecedentes fundamentan el análisis de la tasa de cancelación como una respuesta directa ante incrementos abruptos en el precio y tiempos de espera excesivos, demostrando que cuando el costo del servicio y las demoras de llegada se descalibran, los pasajeros abandonan la solicitud y el incentivo de la plataforma se quiebra.
 
 == Incidencia de Condiciones Meteorológicas sobre la Demanda y Operación de Movilidad
 
@@ -38,6 +38,12 @@ La incidencia de las condiciones atmosféricas sobre los sistemas de transporte 
 #cite(<li2018>, form: "prose"), utilizando datos empíricos del sistema de taxis de Shenzhen (China), cuantificaron la influencia directa de la lluvia sobre la demanda urbana de taxi, constatando reducciones en la velocidad de circulación, alteraciones en los patrones de recogida y deterioro del nivel de servicio bajo distintas intensidades de precipitación.
 
 Asimismo, #cite(<battifarano2019>, form: "prose") integraron explícitamente variables meteorológicas (como velocidad del viento, precipitación y visibilidad) junto con datos de tráfico y entorno urbano para construir modelos predictivos del multiplicador tarifario en tiempo real, demostrando la estrecha interdependencia entre clima, congestión y _surge pricing_ en plataformas de movilidad. Estos hallazgos fundamentan la incorporación de los factores climáticos como variables explicativas complementarias en la investigación de MoviGo.
+
+== Modelado de Redes Espaciales, Resiliencia Vial y Algoritmos de Ruteo Prescriptivo
+
+Un antecedente fundamental para abordar la movilidad urbana ante perturbaciones externas radica en la teoría de redes complejas y el análisis de infraestructura espacial. Como sistematiza #cite(<barthelemy2011>, form: "prose"), las redes espaciales de transporte vial presentan propiedades topológicas intrínsecas —tales como la centralidad de intermediación (_betweenness centrality_) y la distribución de caminos mínimos— que determinan la vulnerabilidad de la malla urbana ante fallos localizados o bloqueos de arterias críticas.
+
+En el ámbito de la optimización prescriptiva de rutas, el clásico algoritmo de caminos mínimos formulado por #cite(<dijkstra1959>, form: "prose") se mantiene como el estándar matemático y computacional para la búsqueda de trayectorias de mínima impedancia sobre grafos dirigidos ponderados. La literatura reciente sobre resiliencia en transporte demuestra que contrastar las trayectorias de desplazamiento reales u observadas frente a las trayectorias óptimas prescritas permite auditar la eficiencia operativa de sistemas algorítmicos cerrados (_black-box_), cuantificando el costo temporal que pagan los usuarios cuando la navegación no reacciona oportunamente a cuellos de botella e inundaciones.
 
 == Uso de Telemetría GPS y Datos Georreferenciados en Ciencia de Datos
 

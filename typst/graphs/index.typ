@@ -2,7 +2,7 @@
 
 #let fig-urban-network-topology = figure(
   image("urban_network_topology.png", width: 85%),
-  caption: [Topología de la Red Vial Urbana de Managua: Red Densa OpenStreetMap (69,695 Nodos y 80,287 Aristas) con Superposición de 485 Cauces Pluviales y 298 Hubs de Cuadrante],
+  caption: [Topología Espacial y Red Vial Urbana de Managua: Malla Celular de 298 Cuadrantes con Gradiente Continuo de Exposición Pluvial (0 a 217 Horas Anuales), Superposición de 485 Cauces y Red Densa OpenStreetMap],
 )
 
 #let fig-urban-network-dijkstra = figure(

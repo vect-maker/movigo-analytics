@@ -20,23 +20,23 @@ La presente investigación se sitúa en el municipio de *Managua, Nicaragua*, y 
 - `movigo_comfort`: Vehículos de gama superior con mayores prestaciones de espacio y comodidad.
 - `movigo_moto`: Flota de dos ruedas para traslados individuales ágiles y de menor costo.
 
-El eje central del estudio consiste en *evaluar la eficacia del esquema de tarificación dinámica de MoviGo*, analizando la sensibilidad y elasticidad de la demanda, las tasas de cancelación resultantes, la heterogeneidad territorial de la capital y la viabilidad de esquemas de incentivos económicos como alternativa sostenible al aumento punitivo de tarifas.
+El eje central del estudio consiste en *analizar la resiliencia operativa y la conectividad de la red de transporte selectivo MoviGo*, modelando las relaciones funcionales de duración y tarifa frente a la distancia física recorrida, y evaluando el impacto del ruteo prescriptivo de trayectorias ante los estrangulamientos viales y contingencias climáticas de la capital.
 
 == Dimensión Tarifaria Paramétrica y Dinámica del Surge Pricing
 
-El sistema tarifario de MoviGo opera bajo una regla de tarificación compuesta y paramétrica que calcula en primer lugar una tarifa base regular en función de la distancia, el tiempo y el cuadrante de origen, sobre la cual se aplica el multiplicador dinámico:
+El sistema tarifario de MoviGo opera bajo una regla de tarificación compuesta y paramétrica que calcula en primer lugar el base fare en función de la distancia, el tiempo y la zona de origen, sobre la cual se aplica el surge multiplier:
 
-$ "TarifaBase" = "BajadaBandera"_z + (18.0 dot "distancia_km") + (4.5 dot "duracion_minutos") $
+$ "BaseFare" = "BaseFare"_z + (18.0 dot "distance_km") + (4.5 dot "duration_minutes") $
 
-$ "TarifaFinal" = "TarifaBase" dot "multiplicador_dinamico" $
+$ "FinalFare" = "BaseFare" dot "surge_multiplier" $
 
 Donde:
-- *$"BajadaBandera"_z$:* Costo fijo inicial de arranque del servicio, diferenciado según el cuadrante urbano de partida $z$ (con valores que oscilan entre *C\$ 35.0 y C\$ 80.0 NIO*).
-- *Costo por Distancia:* Cargo paramétrico fijo de *C\$ 18.0 NIO* por cada kilómetro recorrido.
-- *Costo por Tiempo:* Cargo paramétrico fijo de *C\$ 4.5 NIO* por cada minuto transcurrido de trayecto.
-- *Multiplicador Dinámico ($m$):* Factor escalar continuo que oscila regularmente entre *$1.00 times$ (tarifa regular) y $2.80 times$ (alta demanda)*, alcanzando techos extraordinarios de hasta *$3.20 times$* ante perturbaciones meteorológicas severas y colapso vial.
+- *$"BaseFare"_z$:* Costo fijo inicial de arranque del servicio, diferenciado según la zona urbana de partida $z$ (con valores que oscilan entre C\$ 35.0 y C\$ 80.0 NIO).
+- *Costo por Distancia:* Cargo paramétrico fijo de C\$ 18.0 NIO por cada kilómetro recorrido.
+- *Costo por Tiempo:* Cargo paramétrico fijo de C\$ 4.5 NIO por cada minuto transcurrido de trayecto.
+- *Surge Multiplier ($m$):* Factor escalar continuo que oscila regularmente entre $1.00 times$ (tarifa regular) y $2.80 times$ (alta demanda), alcanzando techos de hasta $3.20 times$ ante perturbaciones meteorológicas severas y congestión vial.
 
-Esta arquitectura tarifaria exige examinar si las reglas de cobro utilizadas mantienen coherencia con las características de los desplazamientos y si el multiplicador converge efectivamente hacia un equilibrio de mercado o si, por el contrario, opera en rangos de sobredimensión que desbordan la disposición de pago del usuario, induciendo cancelaciones masivas de viajes.
+Esta arquitectura tarifaria muestra que la tarifa final incorpora componentes fijos, variables y multiplicativos. Por tanto, resulta fundamental contrastar empíricamente si la distancia recorrida es suficiente para explicar la variabilidad del precio final cobrado y de los tiempos de viaje, o si las perturbaciones del entorno y el surge multiplier introducen discrepancias que la planeación convencional no logra capturar.
 
 == Dimensión Territorial y Heterogeneidad Urbana de Managua
 
@@ -44,8 +44,8 @@ La dimensión territorial agrega un nivel de complejidad determinante. Managua p
 
 En este contexto, la demanda de transporte no se distribuye de manera uniforme en el espacio ni permanece constante durante la jornada: la localización de los puntos de atracción laboral y comercial, la conectividad de la red vial, las distancias entre sectores y los niveles diferenciados de accesibilidad condicionan tanto la disponibilidad física de vehículos como las decisiones de los pasajeros:
 
-+ *Asimetría en la Elasticidad-Precio:* Los usuarios de cuadrantes populares presentan una sensibilidad al precio sustancialmente más elástica frente a alzas tarifarias que aquellos en cuadrantes corporativos o de estrato socioeconómico alto.
-+ *Sensibilidad a Medios de Pago y Liquidez:* La heterogeneidad territorial se traduce en una desigual bancarización. El predominio de pagos en efectivo en sectores populares frente al uso de tarjeta o billetera digital en cuadrantes comerciales provoca que aumentos imprevistos en el multiplicador superen el circulante disponible del pasajero, motivando la cancelación inmediata de la solicitud.
++ *Asimetría Socioespacial:* Los usuarios en cuadrantes periféricos o comerciales populares enfrentan condiciones de accesibilidad y presupuestos de gasto más restrictivos frente a alzas tarifarias imprevistas que aquellos en cuadrantes corporativos.
++ *Patrones de Movilidad y Medios de Pago:* La estructura de la ciudad impone traslados de larga distancia entre zonas residenciales y nudos de empleo, acompañados de una desigual bancarización donde coexisten pagos en efectivo y medios digitales, acentuando la vulnerabilidad de los usuarios ante aumentos desmedidos del costo de viaje.
 
 == Dimensión Climática y Choques Exógenos en la Red Vial
 
@@ -58,7 +58,7 @@ Estas condiciones meteorológicas modifican severamente la dinámica del servici
 - La demanda de viajes se dispara abruptamente al buscar los peatones refugio en vehículos selectivos.
 - La disponibilidad efectiva de unidades se contrae o experimenta demoras críticas para alcanzar los puntos de recogida.
 
-Frente a este desbalance simultáneo de oferta y demanda, el algoritmo de la plataforma responde activando multiplicadores extremos ($2.50 times - 3.20 times$). Evaluar si esta respuesta tarifaria equilibra el sistema o exacerba la insatisfacción y la tasa de cancelación constituye un eje investigativo prioritario.
+Frente a este desbalance simultáneo de oferta y demanda, el algoritmo de la plataforma responde activando multiplicadores extremos ($2.50 times - 3.20 times$). Sin embargo, este encarecimiento monetario no resuelve el colapso de velocidad ni evita que los vehículos queden varados en vías inundadas, generando demoras excesivas de recogida que precipitan tasas críticas de cancelación de viajes.
 
 == Alternativa Operativa: Búsqueda de Rutas Óptimas y Ruteo Prescriptivo de Viajes
 
@@ -75,5 +75,5 @@ Para sustentar el análisis operativo y tarifario, la investigación se fundamen
 + *Desacoplamiento vía API REST y Reproducibilidad Abierta:* El acceso a los eventos operativos se realiza mediante una interfaz desacoplada de API REST que expone colecciones paginadas para viajes, cuadrantes, conductores, vehículos, pagos, telemetría y meteorología. El flujo de ingesta (`fetcher.py`) es agnóstico a la infraestructura de despliegue, resolviendo la ubicación del servicio mediante una variable de entorno (`API_URL`). La API no constituye un servicio público permanentemente alojado en la web; en su lugar, tanto el código fuente del servidor transaccional como los conjuntos íntegros de datos son de naturaleza abierta y se liberan públicamente junto con la publicación de este trabajo, garantizando la auditoría independiente y la replicabilidad experimental.
 
 + *Fuente Centralizada de Verdad y Snapshot Analítico Columnar:* Para aislar el análisis de posibles alteraciones de estado y asegurar reproducibilidad estricta, la investigación delimita como universo censal cerrado el año completo 2024 ($N = 77,487$ viajes transaccionales y 366 días de observaciones meteorológicas). El procesamiento de este universo se articula en dos niveles de almacenamiento:
-  - *Repositorio Centralizado (PostgreSQL):* Los registros brutos extraídos por la ingesta se persisten en una base de datos relacional (*Azure Database for PostgreSQL*), que actúa como fuente centralizada de verdad (_single source of truth_), donde se ejecutan pruebas de consistencia y transformaciones dimensionales mediante *dbt Core* bajo modelado en estrella.
-  - *Snapshot Analítico Local (DuckDB):* Para el desarrollo de los flujos de modelado econométrico, mapas exploratorios y análisis estadísticos, se genera una instantánea inmutable (_snapshot_) exportada a un motor columnar integrado (*DuckDB*). Este mecanismo confiere lecturas de ultra baja latencia, ejecución desacoplada de la red y garantiza que cualquier investigador pueda reproducir exactamente los mismos cómputos sin depender de conexiones activas a servicios en la nube.
+  - *Raw Layer en Azure PostgreSQL:* Los registros brutos extraídos por la ingesta se persisten en Azure Database for PostgreSQL, que actúa como single source of truth en su esquema `raw`, donde se ejecutan pruebas de consistencia y transformaciones dimensionales mediante dbt Core bajo un Star Schema.
+  - *Snapshot Analítico en DuckDB:* Para el desarrollo de los flujos de modelado econométrico, mapas exploratorios y análisis estadísticos, se genera un snapshot inmutable exportado a un motor columnar in-process (DuckDB). Este mecanismo confiere lecturas de ultra baja latencia, ejecución desacoplada de la red y garantiza que cualquier investigador pueda reproducir exactamente los mismos cómputos sin depender de conexiones activas a servicios en la nube.

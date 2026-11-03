@@ -96,7 +96,7 @@
       ([], [rating_segment], text(fill: rgb("#64748b"))[text]),
     ))),
 
-    node((1, 2), db-table("dim_campaigns", "OPTIMIZACIÓN", rgb("#14532d"), rgb("#16a34a"), width: 132pt, (
+    node((1, 2), db-table("dim_campaigns", "CONTEXTO", rgb("#0369a1"), rgb("#0284c7"), width: 132pt, (
       (pk-tag, text(weight: "bold")[sk_campaign], text(fill: rgb("#64748b"))[text]),
       ([], [campaign_id], text(fill: rgb("#64748b"))[int]),
       ([], [budget_cost_nio], text(fill: rgb("#64748b"))[decimal]),
@@ -122,7 +122,7 @@
     edge((2, 2), (1, 1), "-|>", stroke: 0.7pt + rgb("#0284c7"), label: text(size: 5.5pt, weight: "bold", fill: rgb("#0369a1"))[1 : N], label-side: right),
 
     // --- ENLACE PRESCRIPTIVO dim_campaigns -> dim_drivers ---
-    edge((1, 2), (2, 2), "-->", stroke: (dash: "dashed", paint: rgb("#16a34a"), thickness: 0.7pt), label: text(size: 5pt, weight: "bold", fill: rgb("#15803d"))[Incentivos], label-side: left),
+    edge((1, 2), (2, 2), "-->", stroke: (dash: "dashed", paint: rgb("#0284c7"), thickness: 0.7pt), label: text(size: 5pt, weight: "bold", fill: rgb("#0369a1"))[Contexto], label-side: left),
   )
 ]
 

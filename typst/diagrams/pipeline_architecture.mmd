@@ -1,0 +1,63 @@
+%% Diagrama Arquitectónico del Pipeline de Datos ELT y DataOps - MoviGo
+flowchart TD
+    %% =========================================================================
+    %% ESTILOS VISUALES Y CLASES
+    %% =========================================================================
+    classDef default fill:#F8FAFC,stroke:#334155,stroke-width:1.5px,color:#0F172A,font-size:12px;
+    classDef p1 fill:#EFF6FF,stroke:#2563EB,stroke-width:1.8px,color:#1E3A8A;
+    classDef p2 fill:#F8FAFC,stroke:#475569,stroke-width:1.8px,color:#1E293B;
+    classDef p3 fill:#FFF7ED,stroke:#EA580C,stroke-width:1.8px,color:#7C2D12;
+    classDef p4 fill:#FEF3C7,stroke:#D97706,stroke-width:1.8px,color:#78350F;
+    classDef p5 fill:#ECFDF5,stroke:#059669,stroke-width:1.8px,color:#064E3B;
+    classDef p6 fill:#FDF4FF,stroke:#A21CAF,stroke-width:1.8px,color:#701A75;
+
+    %% =========================================================================
+    %% FILA 1: INGESTION, RAW DATA & KIMBALL MODELING
+    %% =========================================================================
+    subgraph S1 ["<b>I. TRANSACTIONAL INGESTION, RAW DATA & KIMBALL MODELING</b>"]
+        direction LR
+        P1["`**1. Decoupled Ingestion**
+        • REST API FastAPI (/movigo/*)
+        • Cursor pagination (limit=200)
+        • Intermediate Parquet buffer`"]:::p1
+
+        P2[("`**2. Raw Layer (OLTP)**
+        • Azure PostgreSQL (TLS)
+        • Immutable 3NF raw schema
+        • 7 normalized collections`")]:::p2
+
+        P3["`**3. dbt Core Transformation**
+        • Staging: views & UTC casting
+        • Marts: **Kimball Star Schema**
+        • Fact fct_viajes + 5 dimensions`"]:::p3
+
+        P1 -->|Batch Load to Raw| P2
+        P2 -->|dbt run| P3
+    end
+
+    %% =========================================================================
+    %% FILA 2: ANALYTICAL STORAGE, INFERENCE & DATAOPS
+    %% =========================================================================
+    subgraph S2 ["<b>II. IN-PROCESS OLAP STORAGE, INFERENCE & DATAOPS VALIDATION</b>"]
+        direction LR
+        P4[("`**4. DuckDB Analytical Snapshot**
+        • In-process columnar engine
+        • fct_viajes.parquet snapshot
+        • Vectorized OLAP queries`")]:::p4
+
+        P5["`**5. Modeling & Spatial Inference**
+        • SGD Linear Regression (pricing)
+        • 95% Parametric Confidence Intervals
+        • Dijkstra Routing & Flood Penalty`"]:::p5
+
+        P6["`**6. DataOps & Typst Delivery**
+        • Automated dbt test & pytest
+        • Dynamic bindings in data_bindings
+        • Zero-drift Typst compilation`"]:::p6
+
+        P4 -->|OLAP DataFrames| P5
+        P5 -->|Metrics & Coeffs| P6
+    end
+
+    %% Conexión inter-bloque
+    S1 ==>|Parquet Snapshots / Analytical Extracts| S2

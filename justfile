@@ -10,6 +10,7 @@ export PATH := justfile_directory() + "/.venv/bin:" + env('PATH')
 TYPST_IMAGE         := "ghcr.io/typst/typst:latest"
 DBT_IMAGE           := "ghcr.io/dbt-labs/dbt-postgres:latest"
 export DUCKDB_IMAGE := "docker.io/duckdb/duckdb:latest"
+MERMAID_IMAGE       := "ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:latest"
 
 # Mostrar lista de comandos disponibles
 default:
@@ -51,6 +52,18 @@ build-slides:
 # Compilar diapositivas en modo observador en tiempo real (Live Reload)
 watch-slides:
     just typst watch typst/slides.typ doc/output/slides.pdf
+
+# Generar diagramas de arquitectura desde archivos Mermaid (.mmd) en formato vectorial nativo (PDF) y raster (PNG)
+generate-diagrams:
+    @mkdir -p typst/diagrams
+    podman run --rm --user 0:0 \
+        -v ".:/workspace:Z" \
+        -w /workspace \
+        {{ MERMAID_IMAGE }} \
+        -i typst/diagrams/pipeline_architecture.mmd \
+        -o typst/diagrams/pipeline_architecture.pdf \
+        -s 3
+    @echo "✅ Diagrama vectorial de arquitectura generado en typst/diagrams/pipeline_architecture.pdf"
 
 # Configurar entorno virtual local (.venv) instalando uv automáticamente si no existe y dependencias
 setup-env:

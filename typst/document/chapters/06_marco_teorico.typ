@@ -2,152 +2,153 @@
 #bibliography("../../references.bib")
 #import "../../data_bindings.typ": total-trips-fmt, total-zones
 #import "../../tables/index.typ": fig-strata-summary
-#import "../../graphs/index.typ": fig-urban-network-topology
+#import "../../diagrams/index.typ": fig-pipeline-architecture
 
 = Marco Teórico
 
-== Mercados Bilaterales de Movilidad y Tarificación Dinámica (Surge Pricing)
+== Arquitectura de Datos ELT, Modelado Dimensional Kimball y Validación de Calidad
 
-Las plataformas de transporte selectivo bajo demanda (_ride-hailing_) operan bajo la estructura económica de los *mercados bilaterales* (_two-sided markets_) @cachon2017. En estos entornos, la plataforma actúa como intermediario tecnológico entre dos grupos de agentes interdependientes: los pasajeros que demandan traslados y los socios conductores independientes que suministran capacidad vehicular.
+Para analizar la movilidad urbana y la resiliencia operativa sobre volúmenes masivos de registros, la investigación adopta la ingeniería analítica contemporánea basada en el paradigma ELT (Extract, Load, Transform) @kimball2013. A diferencia del enfoque clásico ETL —donde los datos son transformados antes de su persistencia—, el flujo ELT desacopla la extracción y la carga de la fase de modelación analítica:
 
-El desafío operativo cardinal de este modelo radica en la volatilidad espaciotemporal de la demanda frente a una oferta vehicular con rigideces de desplazamiento físico. Para coordinar ambos lados del mercado en tiempo real, las plataformas implementan algoritmos de *tarificación dinámica* (_surge pricing_) @zha2018.
++ *Raw Layer en Azure PostgreSQL:* Las colecciones transaccionales se recuperan mediante cursor-based pagination y se serializan en archivos columnares Apache Parquet. Dichos datos se cargan en Azure Database for PostgreSQL bajo el esquema transaccional `raw` en Tercera Forma Normal (3NF), garantizando inmutabilidad y aislamiento frente a la fuente de origen.
++ *Transformación Declarativa con dbt Core:* La ingeniería analítica se orquesta mediante dbt en dos capas: staging layer (vistas lógicas puras) y marts layer (tablas físicas bajo un Star Schema optimizado para OLAP).
 
-Desde la perspectiva teórica, el multiplicador dinámico cumple dos funciones primordiales:
-+ *Racionamiento de Demanda:* Eleva el costo del servicio en zonas o momentos saturados, incentivando a los usuarios con viajes postergables o elásticos a desistir de la solicitud.
-+ *Incentivo de Oferta:* Incrementa los ingresos esperados de los choferes, atrayendo unidades desocupadas hacia los focos de alta demanda.
+#fig-pipeline-architecture <fig-pipeline-architecture>
 
-No obstante, cuando el multiplicador supera los umbrales de tolerancia económica de los usuarios o cuando la congestión vial impide que los vehículos lleguen a tiempo, el mecanismo puede colapsar, induciendo tasas severas de cancelación mutua y distorsiones territoriales @castillo2017.
+=== Principios del Modelado Dimensional Kimball
 
-== Microeconomía de la Demanda: Elasticidad-Precio y Cancelación de Viajes
+El diseño del almacén sigue rigurosamente los principios de Ralph Kimball @kimball2013, situando la transacción del viaje como el proceso de negocio atómico:
 
-El comportamiento del pasajero ante la cotización de un viaje se rige por la *teoría de la demanda y la elasticidad-precio*. La elasticidad-precio de la demanda ($epsilon$) mide la variación porcentual en la cantidad demandada de viajes ($Q$) ante un cambio porcentual en la tarifa ($P$):
-
-$ epsilon = frac(Delta Q \/ Q, Delta P \/ P) = frac(partial Q, partial P) dot frac(P, Q) $ <eq-elasticidad>
-
-En servicios de transporte urbano:
-- *Demanda Inelástica ($|epsilon| < 1$):* El usuario requiere movilizarse de forma imperativa (ej. emergencias, compromisos laborales estrictos en horas pico) y tolera incrementos moderados en la tarifa.
-- *Demanda Elástica ($|epsilon| > 1$):* El usuario posee alternativas viables o alta sensibilidad presupuestaria, reaccionando al incremento del multiplicador mediante el desistimiento inmediato o la *cancelación del viaje tras haber solicitado el servicio*.
-
-En MoviGo, la tarifa final se define paramétricamente mediante la fórmula:
-
-$ "TarifaBase" = "BajadaBandera"_z + (18.0 dot "distancia_km") + (4.5 dot "duracion_minutos") $
-
-$ "TarifaFinal" = "TarifaBase" dot "multiplicador_dinamico" $
-
-Donde el multiplicador dinámico oscila habitualmente entre $1.00times$ y $2.80times$, con techos extraordinarios de $3.20times$ durante tormentas. Cuando la tarifa final resultante excede el excedente del consumidor, o cuando el tiempo de espera estimado se dilata debido a la congestión, se desencadena la cancelación del viaje (`estado_viaje = 'cancelado_usuario'`), representando una pérdida económica neta tanto para la plataforma como para el conductor.
-
-== Equidad Socio-Espacial y Disparidad Territorial en Managua
-
-La teoría de la justicia espacial y el acceso al transporte urbano postula que las tarifas y la disponibilidad de los servicios de movilidad no deben discriminar ni excluir a las poblaciones de menores recursos.
-
-En el municipio de Managua, la estructura urbana se caracteriza por una marcada heterogeneidad y fragmentación socioespacial. MoviGo discretiza la capital en 24 zonas urbanas agrupadas en cuatro estratos socioeconómicos y subdivididas en 298 cuadrantes operacionales (@tbl-strata-summary; el catálogo pormenorizado con coordenadas y radios de cobertura se detalla en el Apéndice B, @tbl-zones-catalog):
++ *Fact Table Atómica (`fct_viajes`):* Modela cada intento o solicitud de traslado registrado ($N = #total-trips-fmt$), fijando el grain al nivel más atómico del proceso operativo. Agrupa tanto métricas numéricas aditivas y continuas (distancia en km, duración en minutos, wait time, base fare, tarifa cobrada y surge multiplier) como indicadores lógicos de desenlace del servicio (`is_cancelled`, `is_cancelled_by_user`, `is_cancelled_by_driver`, `is_completed`).
++ *Conformed Dimensions y Jerarquía Territorial:* Aportan el contexto analítico y los atributos de filtrado:
+  - `dim_zones`: Caracteriza las #total-zones zonas urbanas de Managua mediante su estratificación socioeconómica, coordenadas de centroide y base fare (@tbl-strata-summary; catálogo detallado en Apéndice B, @tbl-zones-catalog). Opera como role-playing dimension, enlazándose de forma simultánea con el cuadrante de origen (`sk_zone_origin`) y el cuadrante de destino (`sk_zone_destination`).
+  - `dim_quadrants`: Contiene la discretización espacial celular en 298 cuadrantes territoriales, incorporando elevación topográfica y riesgo de exposición hidrológica ante cauces.
+  - `dim_weather`: Registra las observaciones meteorológicas diarias (precipitación en milímetros, temperatura, estacionalidad climática y congestion index).
+  - `dim_users` y `dim_drivers`: Agrupan atributos de comportamiento, modalidades vehiculares (`movigo_estandar`, `movigo_comfort`, `movigo_moto`) y tasas de retención.
+  - `dim_campaigns`: Registra el catálogo de programas de incentivos y bonos para conductores.
++ *Surrogate Keys Determinísticas (MD5):* Para garantizar idempotencia e independencia frente a cambios en los identificadores del sistema origen, los enlaces dimensionales se resuelven mediante surrogate keys generadas como `md5(cast(id as text))`.
 
 #fig-strata-summary <tbl-strata-summary>
 
-En la arquitectura del servicio, la *zona de origen* del viaje ($z_"origen"$) es el factor determinante que fija el costo inicial del servicio mediante la tarifa de bajada de bandera ($"BajadaBandera"_(z_"origen")$). Este costo base, sumado a los cargos paramétricos por distancia ($18.00 "NIO/km"$) y tiempo ($4.50 "NIO/min"$), constituye la base imponible sobre la cual se aplica el multiplicador dinámico ($m$).
+=== Data Tests y Validación Automatizada de Calidad
 
-Esta estructuración genera una fuerte *asimetría en la propensión a la cancelación de viajes*:
-+ *Condicionamiento del Medio de Pago:* En los cuadrantes populares de origen predomina el pago en *efectivo*, donde los usuarios planifican sus gastos con presupuestos líquidos estrictos. Cuando la plataforma aplica un multiplicador dinámico elevado ($m > 1.30times$), el sobrecosto sobrepasa la liquidez inmediata del pasajero, forzando la cancelación inmediata de la solicitud.
-+ *Inelasticidad en Cuadrantes Altos:* Por el contrario, en los cuadrantes de estrato alto y comercial predomina el pago digital con *tarjeta de crédito o débito*, donde los usuarios presentan menor elasticidad-precio y mayor capacidad de absorber incrementos en la tarifa final sin recurrir a la cancelación.
-+ *Doble Rol Dimensional:* Dentro del modelo analítico, la zona de origen actúa como la entidad generadora del viaje y rectora del precio base, mientras que la zona de destino determina la longitud del trayecto y las rutas de desplazamiento sobre la red vial capitalina.
+La validez de los resultados analíticos depende de que la integridad del repositorio no sea supuesta, sino empíricamente demostrada. En el marco de dbt Core, la calidad de los datos se formaliza a través de cuatro data tests declarativos:
+1. *Unicidad (`unique`):* Garantiza que las surrogate keys no presenten duplicación de registros en la fact table ni en las conformed dimensions.
+2. *Completitud (`not_null`):* Verifica la ausencia de valores nulos en variables determinantes para los modelos (distancia, duración, tarifa final, surge multiplier y claves foráneas).
+3. *Integridad Referencial (`relationships`):* Asegura que toda clave foránea en la fact table apunte de manera estricta a un registro existente en su conformed dimension padre, previniendo registros huérfanos.
+4. *Restricción de Dominio (`accepted_values`):* Valida que los atributos categóricos contengan valores permitidos por el modelo de negocio (ej. estados de viaje válidos, surge multipliers no inferiores a $1.00times$).
 
-== Arquitectura de Datos y Paradigma ELT
+=== Motor Analítico Columnar DuckDB
 
-Para investigar empíricamente este fenómeno, se requiere una arquitectura analítica moderna capaz de transformar registros transaccionales dispersos en un repositorio estructurado para la toma de decisiones. 
+Para posibilitar un análisis exploratorio y econométrico de ultra baja latencia sin sobrecargar la infraestructura transaccional en la nube, el almacén dimensional validado es exportado como un snapshot inmutable a DuckDB. DuckDB opera como un motor columnar in-process que procesa consultas vectorizadas de forma local, permitiendo auditar la integridad y calcular agregaciones analíticas con tiempos de respuesta submilisegundo.
 
-Bajo las mejores prácticas de la ingeniería de datos contemporánea, la solución tecnológica se estructura bajo el paradigma *ELT (Extract, Load, Transform)*:
+== Modelado Funcional de Movilidad, Optimización Numérica por Descenso de Gradiente (SGD) e Inferencia Estadística
 
-+ *Ingesta y Carga Cruda (Paradigma ELT):* Los procesos de extracción consumen las fuentes transaccionales y de catálogo, gestionando paginación sistemática, serializando archivos columnares en Apache Parquet y asegurando la integridad referencial antes de persistir los datos en un servicio administrado en la nube (*Azure Database for PostgreSQL*). Esta capa opera como réplica transaccional estructurada en la base de datos bajo el esquema `raw` (OLTP).
-+ *Transformación Analítica con dbt Core:* La orquestación del almacén de datos se delega en herramientas declarativas de ingeniería analítica (*dbt Core*), estructurando las transformaciones en un flujo de dos niveles: una capa de limpieza y enriquecimiento operacional (_staging_) materializada como vistas lógicas, y una capa dimensional de negocio (_marts_) materializada físicamente en tablas optimizadas para procesamiento analítico en línea (OLAP) @kimball2013.
+Para cuantificar cómo las características físicas del traslado determinan la dinámica operativa y tarifaria de la plataforma, se postulan dos modelos funcionales de regresión lineal simple bivariada:
+1. *Modelo de Duración:* Estima el tiempo de recorrido en minutos ($hat(y)_"min"$) a partir de la distancia física recorrida en kilómetros ($x$).
+2. *Modelo de Tarifa:* Estima el precio cobrado en Córdobas ($hat(y)_"C$"$) a partir de la distancia física recorrida en kilómetros ($x$).
 
-== Modelado Dimensional Kimball y Esquema en Estrella para Análisis del Viaje
-
-El diseño analítico sigue rigurosamente los principios de modelado dimensional propuestos por Ralph Kimball @kimball2013, definiendo la atención y resolución del viaje como el proceso de negocio nodal a través de un *Esquema en Estrella* (_Star Schema_):
-
-+ *Tabla de Hechos Atómica (`fct_viajes`):* Posee el grano más fino posible: un registro por cada intento o solicitud de traslado registrado ($N = #total-trips-fmt$). Centraliza tanto métricas monetarias (tarifa base, multiplicador dinámico aplicado, recargo absoluto por surge y tarifa final) como métricas operativas (distancia recorrida, duración efectiva, tiempo de espera en minutos) e indicadores dicotómicos del resultado del servicio (`is_cancelled`, `is_cancelled_by_user`, `is_cancelled_by_driver`, `is_completed`).
-+ *Dimensiones Conformadas:* Proveen el contexto descriptivo y los filtros analíticos para el desglose multidimensional:
-  - `dim_zones`: Caracteriza las #total-zones zonas urbanas de Managua, su estrato socioeconómico, clasificación ordinal de ingreso, coordenadas geográficas y costo base de bajada de bandera. Opera como dimensión de doble rol (_role-playing dimension_), relacionándose simultáneamente con la zona de origen (`sk_zone_origin`) y la zona de destino (`sk_zone_destination`).
-  - `dim_quadrants`: Contiene los 298 cuadrantes espaciales discretizados, permitiendo análisis micro-territoriales, altimetría y clasificación de riesgo pluvial por cauces.
-  - `dim_weather`: Registra a nivel diario la serie temporal meteorológica, cuantificando la precipitación en milímetros, temperatura ambiente, condición de cielo, presencia de lluvia, estacionalidad climática de Managua e índice de congestión vehicular.
-  - `dim_users`: Consolida atributos de los pasajeros, su comportamiento histórico de calificación, segmento de reputación y preferencia de pago (efectivo versus medios digitales).
-  - `dim_drivers`: Agrupa la información del parque vehicular (tipo de servicio: estándar, comfort o moto), modelo, año, estado activo, tasa de aceptación e historial acumulado de mantenimiento mecánico.
-  - `dim_campaigns`: Almacena el portafolio de programas de incentivos y bonos para conductores, especificando el costo presupuestario, horas de conexión proyectadas y zona urbana objetivo.
-+ *Llaves Subrogadas Sintéticas Determinísticas (MD5):* En concordancia con las mejores prácticas de la ingeniería analítica moderna, el enlace entre la tabla de hechos y las dimensiones no depende de las claves primarias autoincrementales del sistema origen, sino de llaves subrogadas hash (`sk_*`) generadas mediante la función criptográfica `md5(cast(id as text))`. Este mecanismo desacopla el almacén de posibles colisiones o mutaciones en los identificadores operativos, garantizando idempotencia, inmutabilidad y máxima eficiencia en las operaciones de cruce (_joins_).
-
-== Optimización Numérica por Descenso de Gradiente (SGD) e Inferencia Paramétrica
-
-La modelación de las relaciones operativas y financieras del servicio de movilidad se formula formalmente como un problema de *optimización matemática iterativa* sobre la función de pérdida del Error Cuadrático Medio ($"MSE"$). Dado un conjunto de observaciones muestrales $(x_i, y_i)_(i=1)^n$ donde $x_i$ representa la distancia de recorrido en kilómetros e $y_i$ la variable respuesta (duración del viaje en minutos o tarifa final en Córdobas - NIO), el modelo lineal postula:
+Formalmente, para un conjunto de observaciones $(x_i, y_i)_(i=1)^n$:
 
 $ y_i = beta_0 + beta_1 x_i + epsilon_i, quad epsilon_i tilde.op cal(N)(0, sigma^2) $ <eq-regresion-simple>
 
-Para estimar los parámetros óptimos $bold(beta) = [beta_0, beta_1]^T$, se define la función convexa de pérdida cuadrática:
+donde $beta_0$ representa el costo fijo o tiempo inicial de arranque (intercepto) y $beta_1$ la tasa marginal de incremento por kilómetro adicional (pendiente).
+
+=== Formulación del Problema de Optimización y Descenso de Gradiente Estocástico
+
+La estimación de los parámetros óptimos $bold(beta) = [beta_0, beta_1]^T$ se formula como un problema de optimización convexa que minimiza la función de pérdida del Error Cuadrático Medio ($"MSE"$):
 
 $ L(bold(beta)) = frac(1, 2n) sum_(i=1)^n (y_i - (beta_0 + beta_1 x_i))^2 $ <eq-loss-mse>
 
-En lugar de recurrir a la solución analítica clásica de inversión matricial directa (ecuaciones normales $(X^T X)^(-1) X^T y$), cuya complejidad computacional y demanda de memoria escalan con el volumen transaccional masivo, se implementa el algoritmo iterativo de *Descenso de Gradiente Estocástico (SGD)*. La regla de actualización paramétrica en la época $k+1$ se rige por:
+Frente al enfoque tradicional de inversión matricial de ecuaciones normales ($(X^T X)^(-1) X^T y$), el estudio implementa el algoritmo iterativo de *Descenso de Gradiente Estocástico (SGD)*. La regla de actualización paramétrica en la época $k+1$ se define como:
 
 $ bold(beta)^((k+1)) = bold(beta)^((k)) - eta_k nabla L_i (bold(beta)^((k))) $ <eq-sgd-rule>
 
-donde $eta_k$ representa la tasa de aprendizaje modulada mediante un esquema de decrecimiento inverso (_inverse scaling_):
+donde $eta_k$ es la tasa de aprendizaje sujeta a un esquema de decaimiento inverso (_inverse scaling_) para garantizar convergencia asintótica hacia el mínimo global sin oscilaciones:
 
 $ eta_k = frac(eta_0, (1 + gamma dot k)^p) $ <eq-learning-rate>
 
-Para asegurar un condicionamiento numérico favorable y evitar oscilaciones en valles alargados de la superficie de pérdida, la variable predictora es estandarizada previamente a escala normal estándar ($z = (x - mu) \/ sigma$). Tras alcanzar la convergencia algorítmica bajo el criterio $\|bold(beta)^((k+1)) - bold(beta)^((k))\|_2 < "tol"$, los coeficientes son des-escalados analíticamente a sus dimensiones físicas reales:
+Para acondicionar la superficie de pérdida y acelerar la convergencia, la variable predictora $x$ se somete a estandarización normal estándar ($z = (x - mu_x) \/ sigma_x$). Una vez alcanzada la convergencia bajo la tolerancia $\|bold(beta)^((k+1)) - bold(beta)^((k))\|_2 < "tol"$, los coeficientes obtenidos en escala estandarizada ($w_"scaled", b_"scaled"$) se des-escalan analíticamente a sus unidades físicas reales:
 
 $ beta_1 = frac(w_"scaled", sigma_x), quad beta_0 = b_"scaled" - beta_1 mu_x $ <eq-unscaling>
 
+=== Partición Metodológica y Evaluación de Generalización
+
+Para prevenir el sobreajuste y contrastar objetivamente la capacidad predictiva del modelo, el censo de viajes completados se particiona en dos conjuntos disjuntos mediante muestreo aleatorio reproducible:
+- *Conjunto de Entrenamiento (80%):* Empleado exclusivamente para el ajuste iterativo de los parámetros por SGD.
+- *Conjunto de Prueba (20%):* Datos que el algoritmo nunca vio durante el ajuste, empleados para medir la generalización mediante métricas formales:
+  - *Coeficiente de Determinación ($R^2$):* Cuantifica la proporción de varianza de la variable respuesta explicada por la distancia:
+    $ R^2 = 1 - frac(sum_(i=1)^n (y_i - hat(y)_i)^2, sum_(i=1)^n (y_i - macron(y))^2) $
+  - *Error Absoluto Medio (MAE):* Expresa el error promedio en unidades físicas directas (minutos o córdobas):
+    $ "MAE" = frac(1, n) sum_(i=1)^n |y_i - hat(y)_i| $
+  - *Raíz del Error Cuadrático Medio (RMSE):* Penaliza con mayor severidad las desviaciones atípicas de magnitud extrema:
+    $ "RMSE" = sqrt(frac(1, n) sum_(i=1)^n (y_i - hat(y)_i)^2) $
+
 === Inferencia Estadística y Bandas de Confianza al 95%
 
-Desde el marco de la inferencia estadística paramétrica, la varianza del estimador de mínimos cuadrados se deduce de la matriz de varianza-covarianza:
+Para cuantificar la incertidumbre muestral de los estimadores, la teoría estadística asume que bajo el Teorema del Límite Central y grandes volúmenes muestrales ($N_"train" > 39,000$), los estimadores de mínimos cuadrados convergen asintóticamente hacia una distribución normal. La matriz de varianza-covarianza paramétrica se calcula como:
 
 $ "Var"(hat(bold(beta))) = sigma^2 (X^T X)^(-1) $ <eq-var-covar>
 
-donde la varianza residual insesgada del modelo se calcula mediante:
+donde la varianza residual insesgada del modelo se define a través de los grados de libertad residuales ($n - p$, con $p = 2$):
 
 $ hat(sigma)^2 = frac(sum_(i=1)^n (y_i - hat(y)_i)^2, n - p) $ <eq-sigma2>
 
-siendo $n$ el tamaño de muestra de entrenamiento y $p = 2$ el número de parámetros libres calculados (intercepto y pendiente). Los errores estándar de los estimadores corresponden a la raíz cuadrada de los elementos diagonales: $"SE"(hat(beta)_j) = sqrt(hat(sigma)^2 [(X^T X)^(-1)]_(j j))$.
+El error estándar del coeficiente corresponde a $"SE"(hat(beta)_j) = sqrt(hat(sigma)^2 [(X^T X)^(-1)]_(j j))$. En consecuencia, el intervalo de confianza al 95% para cada parámetro estructural se deduce formalmente como:
 
-Bajo el supuesto de normalidad asintótica garantizado por el Teorema del Límite Central sobre grandes muestras ($N_"train" > 39,000$), el intervalo de confianza al 95% para cada coeficiente paramétrico se establece formalmente como:
+$ "IC"_(95%) (beta_j) = [hat(beta)_j - 1.96 dot "SE"(hat(beta)_j), quad hat(beta)_j + 1.96 dot "SE"(hat(beta)_j)] $ <eq-ci-95>
 
-$ "IC"_(95%) (beta_j) = [hat(beta)_j - z_(alpha \/ 2) dot "SE"(hat(beta)_j), quad hat(beta)_j + z_(alpha \/ 2) dot "SE"(hat(beta)_j)] $ <eq-ci-95>
+== Teoría de Grafos Espaciales, Topología Vial y Ruteo Prescriptivo de Caminos Mínimos
 
-donde $z_(0.025) = 1.96$ corresponde al cuantil crítico de la distribución normal estándar.
+La estimación bivariada de duración y costo asume implícitamente una ciudad homogénea; sin embargo, en la práctica el tiempo de traslado depende de la configuración topológica de la red vial urbana y de su vulnerabilidad ante perturbaciones exógenas.
 
-== Fundamentos Teóricos para la Optimización Espacial y Auditoría de Ruteo
+=== Modelado Topológico Jerárquico de la Red Vial
 
-La infraestructura territorial y la movilidad urbana de Managua se modelan formalmente como una red espacial jerárquica de dos escalas:
-- Una *red física densa de vías urbanas* $G_"street" = (V_s, E_s)$ extraída de OpenStreetMap, compuesta por $|V_s| = 69,695$ nodos de intersección y $|E_s| = 80,287$ aristas de circulación vial calibradas según su jerarquía funcional (autopistas, arterias principales, vías secundarias y residenciales), donde los tramos a menos de 50 metros de los 485 cauces pluviales sufren anegamiento y colapso de velocidad en eventos de lluvia (@fig-urban-network-topology).
-- Una *red celular territorial* $G_"cell" = (V_c, E_c)$ de 298 cuadrantes (`dim_quadrants`) y 1,072 conexiones contiguas en 24 zonas analíticas, articulada con el Star Schema dimensional Kimball para el análisis macroscópico de flujos y centralidad de intermediación.
-- Cada arista vial $(i, j) in E_s$ posee una función de impedancia temporal generalizada $tau_(i j)$ que cuantifica el costo de cruce en minutos a partir de su longitud física real $d_(i j)$:
-  $ tau_(i j) = frac(d_(i j), v_(i j) (c)) dot 60 $
-  donde $v_(i j)(c)$ es la velocidad efectiva de circulación condicionada por la jerarquía vial y el régimen meteorológico $c in {"seco", "tormenta"}$:
-  $ v_(i j) (c) = v_(0, "vía") dot (1 - 0.75 dot bb(I)_"anegamiento") $
+La infraestructura territorial y la movilidad de Managua se formalizan como una red espacial jerárquica de dos niveles:
+1. *Red Física Densa de Vías Urbanas ($G_"street" = (V_s, E_s)$):* Extraída del repositorio geográfico OpenStreetMap, integrada por $|V_s| = 69,695$ nodos de intersección y $|E_s| = 80,287$ tramos viales calibrados según su jerarquía funcional (autopistas, arterias principales, colectores y vías residenciales).
+2. *Red Celular Territorial ($G_"cell" = (V_c, E_c)$):* Malla de 298 cuadrantes (`dim_quadrants`) y 1,072 conexiones contiguas en 24 zonas analíticas, articulada con el Star Schema dimensional para el análisis agregado de flujos origen-destino y centralidad.
 
-#fig-urban-network-topology <fig-urban-network-topology>
+=== Función de Impedancia Temporal y Modelo de Anegamiento Pluvial
 
-Para identificar los puntos neurálgicos de estrangulamiento y vulnerabilidad estructural en el sistema de transporte, se analiza la *Centralidad de Intermediación (_Betweenness Centrality_)* de cada cuadrante y zona urbana:
+Cada tramo vial $(i, j) in E_s$ posee una función de impedancia temporal generalizada $tau_(i j)$ que cuantifica el costo de cruce en minutos a partir de su longitud física real $d_(i j)$:
+
+$ tau_(i j) = frac(d_(i j), v_(i j) (c)) dot 60 $
+
+donde $v_(i j)(c)$ representa la velocidad efectiva de circulación condicionada por la jerarquía de la vía y el régimen meteorológico $c in {"seco", "tormenta"}$.
+
+Para incorporar el riesgo hidrológico, se define una zona de influencia geométrica (buffer de 50 metros) alrededor de los 485 cauces pluviales de Managua. Cuando un tramo vial es interceptado por un cauce desbordado durante una tormenta, su velocidad experimenta un colapso inducido:
+
+$ v_(i j) (c) = v_(0, "vía") dot (1 - 0.75 dot bb(I)_"anegamiento") $
+
+=== Diagnóstico de Vulnerabilidad mediante Betweenness Centrality
+
+Para identificar los puntos críticos de estrangulamiento donde el sistema de transporte es susceptible de colapsar, se calcula la métrica de Betweenness Centrality sobre los pares origen-destino de la red:
 
 $ C_B (v) = sum_(s eq.not v eq.not t) frac(sigma_(s t)(v), sigma_(s t)) $ <eq-betweenness>
 
-donde $sigma_(s t)$ es el número total de caminos más cortos entre los pares de origen y destino $s$ y $t$, y $sigma_(s t)(v)$ es la cantidad de dichos caminos que transitan obligatoriamente a través del vértice $v$.
+donde $sigma_(s t)$ representa el número total de caminos mínimos entre el origen $s$ y el destino $t$, y $sigma_(s t)(v)$ es la cantidad de dichos caminos que atraviesan forzosamente el vértice $v$. Nodos con alto $C_B$ constituyen cuellos de botella sistémicos donde cualquier perturbación climática propaga retrasos masivos a toda la capital.
 
-=== Auditoría Algorítmica de Caja Negra y Algoritmo de Dijkstra
+=== Auditoría de Ruteo Black-Box y Algoritmo de Dijkstra
 
-Dado que el algoritmo de ruteo interno de la plataforma MoviGo es propietario y cerrado (*black box*), su desempeño se evalúa a través de los resultados empíricos observados en el almacén analítico ($t_"real"$, $v_"real"$, $d_"real"$). Para contrastar este comportamiento frente a una alternativa óptima, se implementa el *Algoritmo de Dijkstra* con relajación de aristas:
+Dado que el algoritmo comercial de despacho y ruteo de MoviGo es propietario y cerrado (black-box), su comportamiento se audita contrastando las trayectorias reales observadas en el censo analítico frente a un óptimo prescriptivo calculado mediante el Algoritmo de Dijkstra sobre la red vial ponderada.
+
+El algoritmo resuelve el problema del camino más corto aplicando iterativamente la regla de relajación de aristas:
 
 $ "dist"[j] = min("dist"[j], "dist"[i] + tau_(i j)) $
 
-Dijkstra determina la trayectoria prescriptiva de mínima impedancia capaz de circunnavegar activamente los cuadrantes con cauces desbordados (como el Cauce Occidental y el Cauce Oriental). La ineficiencia o sub-optimización de las rutas observadas de MoviGo frente al óptimo prescriptivo se cuantifica mediante el *Índice de Sub-optimización* ($rho$) y el ahorro temporal neto ($Delta T$):
+Dijkstra determina la ruta de mínima impedancia capaz de circunnavegar activamente los tramos anegados por cauces desbordados. La ineficiencia del ruteo observado de MoviGo frente al óptimo prescriptivo se cuantifica mediante el *Índice de Sub-optimización* ($rho$) y el ahorro temporal neto ($Delta T$):
 
 $ rho = frac(t_"real", t_"óptimo"), quad Delta T = t_"real" - t_"óptimo" $
 
-Este marco permite demostrar empíricamente cómo el ruteo adaptativo no solo reduce las dilataciones de viaje en hasta un 60%, sino que previene el cruce del umbral crítico de 15 minutos de espera que precipita las cancelaciones de viajes.
+=== Métricas Macroscópicas de Red: Diámetro y Tortuosidad
 
-=== Arquitectura DataOps y Reproducibilidad Computacional
+Para evaluar la degradación estructural de la red metropolitana bajo choques pluviales, se monitorean dos indicadores globales:
+- *Diámetro de la Red ($D$):* Longitud temporal del camino mínimo más largo entre todos los pares origen-destino conectados ($D = max_(s, t) d(s, t)$), cuantificando la máxima separación de tiempo en la ciudad.
+- *Tortuosidad de Ruta ($T$):* Razón entre la longitud física real de la trayectoria recorrida y la distancia geodésica euclidiana directa ($T = d_"recorrida" \/ d_"euclidiana"$), reflejando el grado de desvío forzado que impone la infraestructura o la inundación de cauces.
 
-El marco de ingeniería del proyecto se sustenta en los principios de automatización y reproducibilidad de la computación científica en entornos tipo Unix/Linux:
-- *Orquestación Declarativa vía `justfile`:* Automatiza la ejecución end-to-end de tareas analíticas y de compilación mediante un ejecutor de comandos centralizado.
-- *Shell Scripting Profesional en Bash:* Implementación de scripts de extracción y carga con directivas estrictas (`set -euo pipefail`) para garantizar fallas tempranas ante cualquier inconsistencia.
-- *Motor Analítico Columnar DuckDB:* Ejecuta consultas de agregación analítica OLAP de alto rendimiento directamente sobre el archivo de base de datos en proceso (`pipeline/data/analytics.duckdb`), exportando contratos de datos estructurados en formato JSON.
-- *Paradigma Data-to-Document en Typst:* El documento final no almacena cifras estáticas manuales; todas las métricas, parámetros de regresión, raíces y tiempos de ruta se leen dinámicamente en tiempo de compilación desde los archivos JSON, garantizando un flujo determinístico sin margen de error por transcripción humana (*zero human drift*).
+== Arquitectura DataOps y Reproducibilidad Computacional
+
+El marco analítico y científico del proyecto se sustenta en los principios de automatización, trazabilidad e inmutabilidad propios de la cultura DataOps en entornos Linux:
+- *Orquestación Declarativa vía `justfile`:* Automatiza la ejecución determinística del flujo completo (`just fetch-data`, `just dbt-run`, `just run-regression`, `just run-optimization`, `just build-doc`).
+- *Shell Scripting Profesional en Bash:* Implementación de scripts de ingesta y snapshot bajo directivas estrictas de ejecución (`set -euo pipefail`), asegurando interrupción inmediata ante inconsistencias.
+- *Paradigma Data-to-Document en Typst:* El artículo científico no contiene valores numéricos estáticos transcritos manualmente. Todas las métricas del censo, parámetros de regresión, intervalos de confianza y tiempos de ruteo se cargan en tiempo de compilación desde contratos de datos en archivos JSON (`typst/data/`), garantizando consistencia absoluta y cero deriva humana (*zero human drift*).
