@@ -39,6 +39,9 @@
   "dbt": {
     "staging_models": 13,
     "mart_models": 7,
+    "total_models": 20,
+    "tested_models": 20,
+    "model_test_coverage_pct": 100.0,
     "total_tests": 100,
     "tests_by_type": {
       "unique": 42,

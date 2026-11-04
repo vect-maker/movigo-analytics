@@ -108,8 +108,13 @@ $(cat "${SQL_DIR}/05_campaigns_optimization.sql")
 COPY (
 $(cat "${SQL_DIR}/06_zones_catalog.sql")
 ) TO 'typst/data/zones.json' (FORMAT JSON, ARRAY TRUE);
+
+-- 7. Conclusions Empirical KPIs
+COPY (
+$(cat "${SQL_DIR}/07_conclusions_kpis.sql")
+) TO 'typst/data/conclusions_kpis.json' (FORMAT JSON, ARRAY TRUE);
 EOF
-echo "   ✅ 6 SQL analytical datasets exported to ${DATA_DIR}."
+echo "   ✅ 7 SQL analytical datasets exported to ${DATA_DIR}."
 
 # -----------------------------------------------------------------------------
 # 4. Python Scientific Suite Execution (3 Models + 6 Standalone PNGs)
@@ -158,6 +163,7 @@ JSON_FILES=(
     "cancellations_by_weather.json"
     "campaigns_optimization.json"
     "zones.json"
+    "conclusions_kpis.json"
     "numerical_methods.json"
     "pipeline_inventory.json"
     "routing_optimization.json"

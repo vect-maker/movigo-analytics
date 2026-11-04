@@ -98,12 +98,30 @@ def audit_warehouse() -> dict[str, Any]:
 def audit_dbt() -> dict[str, Any]:
     manifest = json.loads(MANIFEST_PATH.read_text())
     nodes = manifest["nodes"].values()
-    models = [n for n in nodes if n["resource_type"] == "model"]
+    models = {n["unique_id"]: n for n in nodes if n["resource_type"] == "model"}
     tests = [n for n in nodes if n["resource_type"] == "test"]
     by_type = Counter(n.get("test_metadata", {}).get("name", "custom") for n in tests)
+    
+    tested_models = set()
+    for t in tests:
+        for node in t.get("depends_on", {}).get("nodes", []):
+            if node in models:
+                tested_models.add(node)
+                
+    total_models_count = len(models)
+    tested_models_count = len(tested_models)
+    coverage_pct = (
+        round(100.0 * tested_models_count / total_models_count, 2)
+        if total_models_count > 0
+        else 0.0
+    )
+
     return {
-        "staging_models": sum(1 for m in models if "staging" in m["path"]),
-        "mart_models": sum(1 for m in models if "marts" in m["path"]),
+        "staging_models": sum(1 for m in models.values() if "staging" in m["path"]),
+        "mart_models": sum(1 for m in models.values() if "marts" in m["path"]),
+        "total_models": total_models_count,
+        "tested_models": tested_models_count,
+        "model_test_coverage_pct": coverage_pct,
         "total_tests": len(tests),
         "tests_by_type": dict(by_type),
     }

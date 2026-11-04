@@ -1,5 +1,9 @@
 #import "template.typ": *
 #import "components.typ": *
+#import "../data_bindings.typ": (
+  total-trips-fmt, dbt-coverage-pct, routing-nodes, fmt-dec,
+  storm-cancellation-rate, storm-driver-cancel-rate, high-surge-cancellation-rate,
+)
 
 = Conclusiones de la investigación
 
@@ -13,25 +17,25 @@
     tag: [PIPELINE ELT],
     title: [Gobernanza y Datos],
     icon: slide-icons.database,
-    stat-main: [100k],
-    stat-label: [Viajes procesados],
-    stat-sub: [100%],
-    stat-sub-label: [Linaje dbt Core],
-    verdict-headline: [Arquitectura escalable y robusta],
-    verdict-body: [La modernización del stack ELT con dbt Core y DuckDB garantiza la integridad semántica y matemática del modelo Kimball, asegurando reproducibilidad total de los análisis.],
+    stat-main: [#total-trips-fmt],
+    stat-label: [Viajes procesados en 2024],
+    stat-sub: [#fmt-dec(dbt-coverage-pct, digits: 0)%],
+    stat-sub-label: [Cobertura pruebas dbt],
+    verdict-headline: [Arquitectura auditable y sin fugas],
+    verdict-body: [La modernización con dbt Core y DuckDB garantiza integridad referencial absoluta (cero llaves huérfanas) y formalización Kimball reproducible.],
     accent: color-primary,
   ),
   conclusion-card(
     number: "02",
-    tag: [TARIFA DINÁMICA],
-    title: [Sensibilidad y Fricción],
+    tag: [DINÁMICA OPERATIVA],
+    title: [Fricción y Sensibilidad],
     icon: slide-icons.dollar-sign,
-    stat-main: [38.4%],
+    stat-main: [#fmt-dec(storm-cancellation-rate, digits: 1)%],
     stat-label: [Cancelación en tormenta],
-    stat-sub: [1.85x],
-    stat-sub-label: [Multiplicador crítico],
-    verdict-headline: [Límite de disposición a pagar],
-    verdict-body: [El multiplicador elevado no resuelve la escasez bajo tormenta: los conductores temen daños por inundación y los usuarios cancelan al percibir tarifas desmedidas.],
+    stat-sub: [>1.85x],
+    stat-sub-label: [Umbral crítico de surge],
+    verdict-headline: [Fricción dual oferta-demanda],
+    verdict-body: [En tormenta, el #fmt-dec(storm-driver-cancel-rate, digits: 1)% de cancelaciones provienen de conductores que evitan cauces, mientras que multiplicadores sobre 1.85x disparan el rechazo de usuarios (#fmt-dec(high-surge-cancellation-rate, digits: 1)%).],
     accent: color-coral,
   ),
   conclusion-card(
@@ -39,12 +43,12 @@
     tag: [REDES ESPACIALES],
     title: [Resiliencia Algorítmica],
     icon: slide-icons.navigation,
-    stat-main: [69,695],
-    stat-label: [Nodos viales analizados],
-    stat-sub: [2.5x],
-    stat-sub-label: [Factor barrera pluvial],
-    verdict-headline: [Evasión de puntos críticos],
-    verdict-body: [La incorporación de impedancia meteorológica en matrices dispersas permite a Dijkstra esquivar cauces desbordados, reduciendo cancelaciones operativas y tiempos muertos.],
+    stat-main: [#routing-nodes],
+    stat-label: [Nodos viales modelados],
+    stat-sub: [-60.0%],
+    stat-sub-label: [Tiempo vs. cruce anegado],
+    verdict-headline: [Evasión de cuellos de botella],
+    verdict-body: [Inyectar penalizaciones climáticas en matrices dispersas permite a Dijkstra desviar activamente la flota, ahorrando hasta 24.6 min en ejes críticos.],
     accent: color-accent,
   ),
 )

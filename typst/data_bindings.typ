@@ -9,6 +9,7 @@
 #let campaigns = json("data/campaigns_optimization.json")
 #let routing = json("data/routing_optimization.json")
 #let numerical-methods = json("data/numerical_methods.json")
+#let conclusions-kpis = json("data/conclusions_kpis.json").at(0)
 
 // Formatter for integers with thousands separator (comma)
 #let fmt-int(n) = {
@@ -159,6 +160,9 @@
 #let inv-integrity = pipeline-inventory.warehouse.integrity
 #let inv-dbt = pipeline-inventory.dbt
 #let dbt-total-tests = inv-dbt.total_tests
+#let dbt-coverage-pct = inv-dbt.model_test_coverage_pct
+#let dbt-total-models = inv-dbt.total_models
+#let dbt-tested-models = inv-dbt.tested_models
 #let dbt-staging-models = inv-dbt.staging_models
 #let dbt-mart-models = inv-dbt.mart_models
 #let dbt-tests-unique = inv-dbt.tests_by_type.unique
@@ -166,6 +170,18 @@
 #let dbt-tests-relationships = inv-dbt.tests_by_type.relationships
 #let dbt-tests-accepted-values = inv-dbt.tests_by_type.accepted_values
 #let total-quadrants = inv-rows.dim_quadrants
+
+// ==========================================
+// MÉTRICAS DE CONCLUSIONES Y FRICCIÓN (DUCKDB)
+// ==========================================
+#let storm-trips-count = conclusions-kpis.viajes_tormenta
+#let storm-cancellations-count = conclusions-kpis.cancelaciones_tormenta
+#let storm-cancellation-rate = conclusions-kpis.tasa_cancelacion_tormenta_pct
+#let storm-driver-cancel-share = conclusions-kpis.participacion_conductor_cancelaciones_tormenta_pct
+#let storm-driver-cancel-rate = conclusions-kpis.cancelacion_conductor_sobre_total_tormenta_pct
+#let high-surge-trips-count = conclusions-kpis.viajes_surge_critico
+#let high-surge-cancellation-rate = conclusions-kpis.tasa_cancelacion_surge_critico_pct
+#let flooded-roads-cancellation-rate = conclusions-kpis.tasa_cancelacion_inundacion_pct
 
 // ==========================================
 // OE2: BINDINGS ADICIONALES DE REGRESIÓN
