@@ -29,6 +29,7 @@ import duckdb
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.artist import Artist
 from matplotlib.axes import Axes
 from matplotlib.collections import LineCollection
 from matplotlib.lines import Line2D
@@ -262,7 +263,7 @@ def plot_od_mobility_flows(
             z2.zone_id as id_dest, z2.zone_name as dest_name,
             cast(z2.longitude as double) as dest_lon, cast(z2.latitude as double) as dest_lat,
             count(*) as volume
-        FROM fct_viajes v
+        FROM fct_trips v
         JOIN dim_zones z1 ON v.sk_zone_origin = z1.sk_zone
         JOIN dim_zones z2 ON v.sk_zone_destination = z2.sk_zone
         GROUP BY z1.zone_id, z1.zone_name, z1.longitude, z1.latitude,
@@ -279,7 +280,7 @@ def plot_od_mobility_flows(
             cast(z.latitude as double) as lat,
             count(v.trip_id) as total_viajes
         FROM dim_zones z
-        LEFT JOIN fct_viajes v ON z.sk_zone = v.sk_zone_origin
+        LEFT JOIN fct_trips v ON z.sk_zone = v.sk_zone_origin
         GROUP BY z.zone_id, z.zone_name, z.longitude, z.latitude
         ORDER BY total_viajes DESC;
     """).fetchall()
@@ -389,7 +390,7 @@ def plot_cancellation_causes(
                 WHEN cancellation_reason IN ('Vía anegada / cauce intransitable', 'Riesgo de inundación / cauce desbordado (rechazo conductor)') THEN 'Vulnerabilidad Pluvial / Cauces'
                 ELSE 'Otros Imprevistos'
             END as macro_causa
-        FROM fct_viajes
+        FROM fct_trips
         WHERE is_cancelled = true
           AND origin_latitude BETWEEN 12.000 AND 12.200
           AND origin_longitude BETWEEN -86.360 AND -86.130;
@@ -576,7 +577,7 @@ def plot_flood_risk_quadrants(
     )
 
     # Custom Legend
-    legend_elements = [
+    legend_elements: list[Artist] = [
         patches.Patch(facecolor=cfg["color"], edgecolor="#2b2d42", alpha=cfg["alpha"], label=cfg["label"])
         for k, cfg in risk_styles.items()
     ]
@@ -618,7 +619,7 @@ def plot_wait_times(
             count(v.trip_id) as total_viajes,
             round(avg(v.wait_time_minutes), 2) as tiempo_espera_promedio
         FROM dim_zones z
-        JOIN fct_viajes v ON z.sk_zone = v.sk_zone_origin
+        JOIN fct_trips v ON z.sk_zone = v.sk_zone_origin
         GROUP BY z.zone_id, z.zone_name, z.socioeconomic_stratum, z.longitude, z.latitude
         ORDER BY tiempo_espera_promedio DESC;
     """).fetchall()

@@ -1,51 +1,16 @@
-#import "@preview/touying:0.6.1": *
-#import themes.metropolis: *
 #import "slides/template.typ": *
-#import "metadata.typ": title-presentation, subtitle-presentation, authors, tutor, career, university
+#import "slides/components.typ": *
+#import "metadata.typ": *
 
-#show: metropolis-theme.with(
-  aspect-ratio: "16-9",
-  footer: self => [
-    #text(size: 7.5pt, fill: text-muted)[
-      MoviGo • Integrador IV • UNAN-Managua
-    ]
-  ],
-  config-info(
-    title: title-presentation,
-    subtitle: subtitle-presentation,
-    author: authors.map(a => a.short-name).join(" • "),
-    institution: [
-      #career • #university \
-      #text(size: 9pt, style: "italic")[Tutor: #tutor.formal-name (#link("mailto:" + tutor.email)[#tutor.email])]
-    ],
-    date: [Segundo Semestre • 2026],
-  ),
-  config-colors(
-    primary: brand-red,
-    secondary: brand-dark,
-    neutral-light: rgb("#f8f9fa"),
-    neutral-dark: rgb("#111827"),
-  )
-)
+#show: movigo-theme.with()
 
-#title-slide()
-
-= 01. Contexto y Planteamiento
-
-#include "slides/01_cover.typ"
-#include "slides/02_context.typ"
-#include "slides/03_literature.typ"
-#include "slides/04_problem.typ"
-
-= 02. Marco Metodológico y Objetivos
-
-#include "slides/05_objectives.typ"
-#include "slides/06_variables.typ"
-#include "slides/07_theory.typ"
-
-= 03. Ingeniería de Datos y Propuesta
-
-#include "slides/08_methodology.typ"
-#include "slides/09_pipeline.typ"
-#include "slides/10_conclusion.typ"
-#include "slides/11_questions.typ"
+#include "slides/01_portada.typ"
+#include "slides/02_problema.typ"
+#include "slides/03_objetivos.typ"
+#include "slides/04_metodologia_elt.typ"
+#include "slides/05_metodologia_modelado.typ"
+#include "slides/06_resultados_tarifa.typ"
+#include "slides/07_resultados_ruteo.typ"
+#include "slides/08_conclusiones.typ"
+#include "slides/09_recomendaciones.typ"
+#include "slides/10_cierre.typ"

@@ -8,7 +8,7 @@ SELECT
     ROUND(AVG(f.surge_multiplier), 2) AS surge_promedio,
     ROUND(AVG(f.final_fare), 2) AS tarifa_promedio_nio,
     ROUND(AVG(f.wait_time_minutes), 2) AS tiempo_espera_promedio_min
-FROM fct_viajes f
+FROM fct_trips f
 JOIN dim_zones z ON f.sk_zone_origin = z.sk_zone
 GROUP BY z.socioeconomic_stratum, z.stratum_level
 ORDER BY z.stratum_level

@@ -25,7 +25,7 @@ Following a thorough strategic re-alignment, the paper places its primary spotli
 ```mermaid
 flowchart TD
     subgraph S1["1. Local Analytical Data Warehouse"]
-        DuckDB[("pipeline/data/analytics.duckdb<br/>(fct_viajes: 77,487 rows<br/>dim_weather: 366 days<br/>dim_zones: 24 zones)")]
+        DuckDB[("pipeline/data/analytics.duckdb<br/>(fct_trips: 77,487 rows<br/>dim_weather: 366 days<br/>dim_zones: 24 zones)")]
     end
 
     subgraph S2["2. Computational Modeling Suite (Python via uv)"]
@@ -93,7 +93,7 @@ SELECT
     sum(CASE WHEN v.es_cancelado THEN 1 ELSE 0 END) AS total_cancelados,
     round(100.0 * sum(CASE WHEN v.es_cancelado THEN 1 ELSE 0 END) / count(*), 4) AS tasa_cancelacion_pct,
     round(avg(v.multiplicador_dinamico), 4) AS multiplicador_promedio
-FROM fct_viajes v
+FROM fct_trips v
 GROUP BY v.fecha_solicitud
 ORDER BY v.fecha_solicitud;
 ```
@@ -127,7 +127,7 @@ ORDER BY v.fecha_solicitud;
 ### 3.2 Numerical Methods: Root-Finding (Bisection & Newton-Raphson)
 
 #### Market Balance Equation
-Calibration of demand $D(m)$ and driver supply $S(m)$ from observed hourly transactions in `fct_viajes`:
+Calibration of demand $D(m)$ and driver supply $S(m)$ from observed hourly transactions in `fct_trips`:
 - Baseline demand at standard fare ($m = 1.00$): $D_0 \approx 220 \text{ requests/hour}$ during peak hours.
 - Price decay rate: $\alpha \approx 0.65$ (exponential elasticity).
   $$D(m) = D_0 \cdot \exp\left(-\alpha (m - 1)\right)$$

@@ -38,7 +38,7 @@ Un sistema de movilidad que responde a las crisis viales elevando tarifas sin op
 
 La presente investigación demuestra la sinergia práctica de la ciencia de datos aplicada a la movilidad metropolitana, articulando armónicamente diferentes frentes técnicos y analíticos en torno a un hilo conductor común:
 
-- *Ingeniería y Almacenamiento Analítico:* Arquitectura ELT, diseño dimensional Star Schema bajo metodología Kimball (fact table atómica `fct_viajes` y conformed dimensions), transformaciones con dbt Core y motor OLAP columnar in-process con DuckDB.
+- *Ingeniería y Almacenamiento Analítico:* Arquitectura ELT, diseño dimensional Star Schema bajo metodología Kimball (fact table atómica `fct_trips` y conformed dimensions), transformaciones con dbt Core y motor OLAP columnar in-process con DuckDB.
 - *Automatización y Reproducibilidad Computacional:* Automatización de ingesta desde API REST paginada, scripts Bash estructurados (`set -euo pipefail`), orquestación mediante `justfile`, entorno reproducible con `uv` y verificación estática con `basedpyright`.
 - *Investigación de Operaciones y Redes:* Teoría de grafos, modelado de red vial urbana y algoritmo de Dijkstra para cuantificar retrasos y desvíos forzados ante contingencias pluviales.
 - *Persistencia Transaccional Relacional:* Diseño relacional normalizado (3NF) y almacenamiento estructurado en la nube sobre Azure Database for PostgreSQL.

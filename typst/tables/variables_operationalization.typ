@@ -20,7 +20,7 @@
     [Decisión de abandonar o no consumar el servicio de transporte solicitado.],
     [Indicador booleano de desenlace del servicio ($1 = "cancelado"$, $0 = "completado"$).],
     [Binaria \ ($0, 1$)],
-    [`fct_viajes`],
+    [`fct_trips`],
 
     [
       *Surge Multiplier* \
@@ -30,7 +30,7 @@
     [Factor de recargo sobre el base fare determinado por desbalance de oferta y demanda.],
     [Multiplicador continuo en escala $[1.00, 3.20]times$ fijado al momento de solicitar el viaje.],
     [Continua \ (Razón)],
-    [`fct_viajes`],
+    [`fct_trips`],
 
     [
       *Trip Distance* \
@@ -40,7 +40,7 @@
     [Longitud métrica vial del desplazamiento planificado entre origen y destino.],
     [Distancia en kilómetros ($"km"$) estimada mediante ruteo con factor de tortuosidad.],
     [Continua \ (Razón)],
-    [`fct_viajes`],
+    [`fct_trips`],
 
     [
       *Congestion Index* \
@@ -60,7 +60,7 @@
     [Ventana horaria de máxima demanda laboral y escolar matutina y vespertina.],
     [Indicador binario ($1$ en 07:00--08:59 y 17:00--18:59; $0$ en horarios valle).],
     [Binaria \ ($0, 1$)],
-    [`fct_viajes`],
+    [`fct_trips`],
 
     [
       *Rain Condition* \

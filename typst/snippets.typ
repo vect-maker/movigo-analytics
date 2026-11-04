@@ -71,9 +71,9 @@ sources:
             tests: [not_null]
 ```
 
-// 5. Esquema en Estrella: Modelo atómico de hechos fct_viajes con llaves MD5
-#let snippet-fct-viajes = ```sql
--- pipeline/dbt/models/marts/fct_viajes.sql: Modelo de hechos y llaves subrogadas MD5
+// 5. Esquema en Estrella: Modelo atómico de hechos fct_trips con llaves MD5
+#let snippet-fct-trips = ```sql
+-- pipeline/dbt/models/marts/fct_trips.sql: Modelo de hechos y llaves subrogadas MD5
 with trips as (select * from {{ ref('stg_trips') }}),
 quadrants as (select * from {{ ref('stg_quadrants') }}),
 payments as (select * from {{ ref('stg_trip_payments') }})
@@ -95,13 +95,14 @@ left join quadrants qo on t.origin_quadrant_id = qo.quadrant_id
 left join quadrants qd on t.destination_quadrant_id = qd.quadrant_id
 left join payments p on t.trip_id = p.trip_id
 ```
+#let snippet-fct-viajes = snippet-fct-trips
 
 // 6. Calidad Dimensional: Pruebas de integridad referencial y dominios en dbt
 #let snippet-marts-models = ```yaml
 # pipeline/dbt/models/marts/_marts__models.yml: Pruebas de integridad referencial y calidad
 version: 2
 models:
-  - name: fct_viajes
+  - name: fct_trips
     columns:
       - name: sk_trip
         tests: [unique, not_null]
@@ -127,9 +128,9 @@ models:
 # pipeline/dbt/models/marts/_marts__models.yml (fragmento)
 version: 2
 models:
-  - name: fct_viajes
+  - name: fct_trips
     columns:
-      - name: sk_viaje
+      - name: sk_trip
         tests: [unique, not_null]
       - name: sk_zone_origin
         tests:
@@ -163,7 +164,7 @@ SELECT
     ROUND(AVG(final_fare), 2) AS tarifa_final_promedio_nio,
     ROUND(AVG(distance_km), 2) AS distancia_promedio_km,
     ROUND(AVG(wait_time_minutes), 2) AS tiempo_espera_promedio_min
-FROM fct_viajes;
+FROM fct_trips;
 ```
 
 // Figuras y Listados enumerados con título formal para documentos y artículos
@@ -187,10 +188,11 @@ FROM fct_viajes;
   caption: [Conexión cifrada e inserción por lotes en Azure Database for PostgreSQL (`loader.py`)],
 )
 
-#let fig-fct-viajes = figure(
-  snippet-fct-viajes,
-  caption: [Modelo de la tabla de hechos atómica en dbt Core con llaves subrogadas hash MD5 (`fct_viajes.sql`)],
+#let fig-fct-trips = figure(
+  snippet-fct-trips,
+  caption: [Modelo de la tabla de hechos atómica en dbt Core con llaves subrogadas hash MD5 (`fct_trips.sql`)],
 )
+#let fig-fct-viajes = fig-fct-trips
 
 #let fig-marts-models = figure(
   snippet-marts-models,

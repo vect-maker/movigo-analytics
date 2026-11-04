@@ -16,4 +16,4 @@ SELECT
     (SELECT COUNT(*) FROM dim_users) AS total_usuarios,
     (SELECT COUNT(*) FROM dim_drivers) AS total_conductores,
     (SELECT COUNT(*) FROM dim_campaigns) AS total_campanias
-FROM fct_viajes
+FROM fct_trips

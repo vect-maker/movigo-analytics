@@ -29,7 +29,7 @@ flowchart TD
         P3["`**3. dbt Core Transformation**
         • Staging: views & UTC casting
         • Marts: **Kimball Star Schema**
-        • Fact fct_viajes + 5 dimensions`"]:::p3
+        • Fact fct_trips + 5 dimensions`"]:::p3
 
         P1 -->|Batch Load to Raw| P2
         P2 -->|dbt run| P3
@@ -42,7 +42,7 @@ flowchart TD
         direction LR
         P4[("`**4. DuckDB Analytical Snapshot**
         • In-process columnar engine
-        • fct_viajes.parquet snapshot
+        • fct_trips.parquet snapshot
         • Vectorized OLAP queries`")]:::p4
 
         P5["`**5. Modeling & Spatial Inference**

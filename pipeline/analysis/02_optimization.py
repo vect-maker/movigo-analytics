@@ -15,7 +15,7 @@ Integrates:
      speeds (trunk, primary, secondary, residential), and flood barriers.
   4. Prescriptive Dijkstra Optimization: Calculates minimum-impedance street routes via
      SciPy CSR sparse matrices, dynamically circumventing flooded cauces.
-  5. Empirical Benchmark: Compares prescriptive routing against MoviGo's observed trips in fct_viajes,
+  5. Empirical Benchmark: Compares prescriptive routing against MoviGo's observed trips in fct_trips,
      quantifying time savings, speed improvements, and cancellation mitigation.
 
 Outputs:
@@ -144,14 +144,14 @@ def load_analytical_data(db_path: Path) -> tuple[dict[int, dict], dict[int, dict
                 "is_flood_barrier": is_flood_barrier,
             }
 
-        # 3. Empirical benchmark statistics from fct_viajes
+        # 3. Empirical benchmark statistics from fct_trips
         dry_summary = con.execute("""
             SELECT count(*),
                    round(avg(f.distance_km), 2),
                    round(avg(f.duration_minutes), 2),
                    round(avg(f.effective_speed_kmh), 2),
                    round(avg(case when f.is_cancelled then 1.0 else 0.0 end)*100, 2)
-            FROM fct_viajes f
+            FROM fct_trips f
             JOIN dim_weather w ON f.sk_weather = w.sk_weather
             WHERE f.origin_flooded_roads = false AND w.has_rain = false;
         """).fetchone()
@@ -162,7 +162,7 @@ def load_analytical_data(db_path: Path) -> tuple[dict[int, dict], dict[int, dict
                    round(avg(f.duration_minutes), 2),
                    round(avg(f.effective_speed_kmh), 2),
                    round(avg(case when f.is_cancelled then 1.0 else 0.0 end)*100, 2)
-            FROM fct_viajes f
+            FROM fct_trips f
             WHERE f.origin_flooded_roads = true;
         """).fetchone()
 

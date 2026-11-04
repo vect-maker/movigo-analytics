@@ -26,7 +26,7 @@ DUCKDB_PATH = BASE_DIR / "pipeline" / "data" / "analytics.duckdb"
 MANIFEST_PATH = BASE_DIR / "pipeline" / "dbt" / "target" / "manifest.json"
 OUTPUT_JSON = BASE_DIR / "typst" / "data" / "pipeline_inventory.json"
 
-FACT = "fct_viajes"
+FACT = "fct_trips"
 DIMENSIONS = [
     "dim_zones",
     "dim_quadrants",

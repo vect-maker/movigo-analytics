@@ -41,7 +41,7 @@ $$\text{[Verbo rector en infinitivo]} + \text{[Objeto de estudio: Qué]} + \text
 ### Regla 4: Verificabilidad y Trazabilidad Empírica de Cifras (Data-to-Document)
 - **Enunciado:** Cualquier métrica, volumen transaccional, recuento dimensional o cifra numérica citada en los objetivos o en el cuerpo de la investigación debe derivarse **exclusiva y estrictamente de los datos reales** consolidados en el almacén analítico (`pipeline/data/analytics.duckdb` y artefactos JSON en `typst/data/`), garantizando la reproducibilidad científica total.
 - **Prohibición estricta:**
-  1. Queda prohibido citar estimaciones aproximadas, números obsoletos o cifras desalineadas de borradores previos (ej. ❌ *65,000 registros*, ❌ *77,386 viajes*, ❌ *77,036 operaciones* cuando el universo real auditado en `fct_viajes` es exactamente **77,487** transacciones).
+  1. Queda prohibido citar estimaciones aproximadas, números obsoletos o cifras desalineadas de borradores previos (ej. ❌ *65,000 registros*, ❌ *77,386 viajes*, ❌ *77,036 operaciones* cuando el universo real auditado en `fct_trips` es exactamente **77,487** transacciones).
   2. En el documento Typst, se debe priorizar el uso de enlaces dinámicos a variables (`#total-trips-fmt`, `#total-zones`, `#routing-edges`, `#routing-net-delay`, etc.) en lugar de escribir números estáticos (*hardcoded*), garantizando cero deriva humana (*zero human drift*).
   3. En los objetivos, si se mencionan cifras cuantitativas de referencia, estas deben auditarse contra la fuente única de verdad (`general_kpis.json`, `routing_optimization.json`) o formularse a nivel conceptual para preservar la generalidad metodológica.
 

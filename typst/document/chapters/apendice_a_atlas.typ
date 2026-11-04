@@ -12,7 +12,7 @@
 
 El análisis de operaciones de transporte selectivo intermediado por plataformas móviles en áreas metropolitanas de alta heterogeneidad socioespacial, como el municipio de Managua, exige una exploración cartográfica multidimensional. Las decisiones de tarificación dinámica (_surge pricing_), el equilibrio microeconómico de flota y la tasa de abandono de viajes no se distribuyen de manera homogénea en el espacio, sino que interactúan intensamente con la morfología urbana, la infraestructura vial primaria, la segregación residencial y la topografía hidrológica de la cuenca sur del Lago Xolotlán.
 
-A través de la integración del almacén de datos dimensional en DuckDB, el registro transaccional georreferenciado de 77,487 viajes (`fct_viajes`) y la malla territorial conformada por 24 zonas urbanas (`dim_zones`) y 298 cuadrantes micro-operacionales (`dim_quadrants`), el presente atlas documenta visualmente los patrones espaciales subyacentes en la operación de MoviGo durante el año 2024.
+A través de la integración del almacén de datos dimensional en DuckDB, el registro transaccional georreferenciado de 77,487 viajes (`fct_trips`) y la malla territorial conformada por 24 zonas urbanas (`dim_zones`) y 298 cuadrantes micro-operacionales (`dim_quadrants`), el presente atlas documenta visualmente los patrones espaciales subyacentes en la operación de MoviGo durante el año 2024.
 
 === Partición Territorial: Agrupamiento de 298 Cuadrantes en 24 Zonas Urbanas
 

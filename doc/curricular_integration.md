@@ -37,7 +37,7 @@ Para mantener la naturalidad y el estándar de publicación formal del artículo
 
 ### 3.2 Diseño y Uso de Bases de Datos Analíticas (Semestre IV)
 - **Evidencia en Repositorio:** Directorio `pipeline/dbt/` (`models/staging` y `models/marts`), archivo de snapshot `pipeline/data/analytics.duckdb` y suites de prueba en YAML (`_marts__models.yml`).
-- **Rúbrica Evaluada:** Implementación de metodología Kimball: tabla de hechos `fct_viajes` a grano atómico por viaje ($N = 77,487$), dimensiones conformadas desacopladas con llaves subrogadas hash MD5, y ejecución de consultas analíticas OLAP en DuckDB con tiempos submilisegundo.
+- **Rúbrica Evaluada:** Implementación de metodología Kimball: tabla de hechos `fct_trips` a grano atómico por viaje ($N = 77,487$), dimensiones conformadas desacopladas con llaves subrogadas hash MD5, y ejecución de consultas analíticas OLAP en DuckDB con tiempos submilisegundo.
 
 ### 3.3 Estadística II (Semestre IV)
 - **Evidencia en Repositorio:** Módulo de partición e inferencia en `pipeline/analysis/01_regression.py`, estructura `confidence_intervals_95_coefficients` y métricas de test en `typst/data/numerical_methods.json`.

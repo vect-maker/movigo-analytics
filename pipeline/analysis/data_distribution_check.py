@@ -63,7 +63,7 @@ def main():
 
     con = duckdb.connect(str(db_path), read_only=True)
 
-    # 1. Operational Micro-Level Metrics (fct_viajes: 77,487 trips)
+    # 1. Operational Micro-Level Metrics (fct_trips: 77,487 trips)
     df_trips = con.execute("""
         SELECT
             distance_km AS distancia_km,
@@ -72,7 +72,7 @@ def main():
             surge_multiplier AS multiplicador_dinamico,
             surge_cost_nio AS sobrecosto_surge_nio,
             wait_time_minutes AS tiempo_espera_minutos
-        FROM fct_viajes;
+        FROM fct_trips;
     """).df()
 
     # 2. Weather Metrics (dim_weather: 366 days)
@@ -84,7 +84,7 @@ def main():
         FROM dim_weather;
     """).df()
 
-    # 3. Daily Aggregate Data (fct_viajes + dim_weather)
+    # 3. Daily Aggregate Data (fct_trips + dim_weather)
     df_daily = con.execute("""
         SELECT
             v.request_date AS fecha,
@@ -94,7 +94,7 @@ def main():
             round(avg(v.surge_multiplier), 4) AS multiplicador_promedio,
             cast(c.precipitation_mm as double) AS precipitacion_mm,
             cast(c.congestion_index as double) AS indice_congestion
-        FROM fct_viajes v
+        FROM fct_trips v
         JOIN dim_weather c ON v.request_date = c.date
         GROUP BY v.request_date, c.precipitation_mm, c.congestion_index
         ORDER BY v.request_date;

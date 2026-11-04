@@ -12,7 +12,7 @@
     align: (col, row) => if row == 0 { center + horizon } else if col == 3 { right + horizon } else { left + horizon },
     fill: (col, row) => if row == 0 { rgb("#f1f5f9") } else if calc.even(row) { rgb("#f8fafc") } else { none },
     table.header([*Modelo (dbt)*], [*Tipo Dimensional*], [*Grain (una fila por…)*], [*Registros*]),
-    [`fct_viajes`], [Fact Table], [Intento o servicio de transporte], [#fmt-int(inv-rows.fct_viajes)],
+    [`fct_trips`], [Fact Table], [Intento o servicio de transporte], [#fmt-int(inv-rows.fct_trips)],
     [`dim_users`], [Conformed Dimension], [Pasajero registrado], [#fmt-int(inv-rows.dim_users)],
     [`dim_drivers`], [Conformed Dimension], [Conductor y su vehículo], [#fmt-int(inv-rows.dim_drivers)],
     [`dim_zones`], [Conformed Dimension], [Zona urbana de Managua], [#fmt-int(inv-rows.dim_zones)],

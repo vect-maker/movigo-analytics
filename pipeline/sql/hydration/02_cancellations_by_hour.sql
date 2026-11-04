@@ -8,6 +8,6 @@ SELECT
     ROUND(AVG(surge_multiplier), 2) AS surge_promedio,
     ROUND(AVG(final_fare), 2) AS tarifa_promedio_nio,
     ROUND(AVG(wait_time_minutes), 2) AS tiempo_espera_promedio_min
-FROM fct_viajes
+FROM fct_trips
 GROUP BY request_hour, is_peak_hour
 ORDER BY request_hour

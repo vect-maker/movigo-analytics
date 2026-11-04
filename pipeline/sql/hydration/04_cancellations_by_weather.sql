@@ -9,7 +9,7 @@ SELECT
     ROUND(AVG(f.final_fare), 2) AS tarifa_promedio_nio,
     ROUND(AVG(w.congestion_index), 2) AS congestion_promedio,
     ROUND(AVG(w.temperature_c), 2) AS temperatura_promedio_c
-FROM fct_viajes f
+FROM fct_trips f
 JOIN dim_weather w ON f.sk_weather = w.sk_weather
 GROUP BY w.has_rain, w.precipitation_category
 ORDER BY w.has_rain, w.precipitation_category

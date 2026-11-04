@@ -95,8 +95,8 @@ def load_dataset(db_path: Path) -> pd.DataFrame:
                 cast(origin_precipitation_mm as double) as origin_precipitation_mm,
                 cast(final_fare as double) as final_fare,
                 cast(surge_multiplier as double) as surge_multiplier
-            FROM fct_viajes
-            WHERE es_completado = true
+            FROM fct_trips
+            WHERE is_completed = true
               AND distance_km > 0
               AND duration_minutes > 0
               AND effective_speed_kmh > 0

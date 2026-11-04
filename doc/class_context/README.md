@@ -11,7 +11,7 @@ El Proyecto Integrador IV articula estos componentes en torno a un caso de estud
 | Componente Curricular | Semestre | Créditos / Horas | Archivo Estandarizado | Articulación con el Proyecto MoviGo |
 | :--- | :---: | :---: | :--- | :--- |
 | **Bases de Datos Relacionales** | III | 3 CR (135 h) | [`relational_databases.md`](relational_databases.md) | Modelo relacional transaccional (OLTP) en PostgreSQL (Azure) y esquemas normalizados. |
-| **Diseño y Uso de Bases de Datos Analíticas** | IV | 3 CR (135 h) | [`analytical_databases.md`](analytical_databases.md) | Modelo dimensional Kimball (esquema estrella con `fct_viajes` y dimensiones), dbt y DuckDB. |
+| **Diseño y Uso de Bases de Datos Analíticas** | IV | 3 CR (135 h) | [`analytical_databases.md`](analytical_databases.md) | Modelo dimensional Kimball (esquema estrella con `fct_trips` y dimensiones), dbt y DuckDB. |
 | **Estadística II** | IV | 3 CR (135 h) | [`statistics_ii.md`](statistics_ii.md) | MCO bivariado y multivariado, ANOVA, diagnósticos residuales (DW, JB) y colinealidad (VIF). |
 | **Métodos Numéricos** | IV | 3 CR (135 h) | [`numerical_methods.md`](numerical_methods.md) | Búsqueda de raíces no lineales ($f(m)=0$) para equilibrio de mercado (Bisección vs. Newton-Raphson). |
 | **Optimización** | IV | 3 CR (135 h) | [`optimization.md`](optimization.md) | Teoría de grafos y algoritmo de Dijkstra en la red vial urbana de Managua (escenario seco vs. tormenta). |

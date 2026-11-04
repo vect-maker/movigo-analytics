@@ -26,7 +26,7 @@
     table.header(
       [*Modelo (dbt)*], [*Rol Dimensional*], [*Surrogate Key (PK)*], [*Relaciones (FK)*], [*Grain y Métricas / Atributos Clave*]
     ),
-    [`fct_viajes`],
+    [`fct_trips`],
     [Fact Table (Atómica)],
     [`sk_trip` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
     [
@@ -43,7 +43,7 @@
     [`dim_zones`],
     [Conformed Dimension],
     [`sk_zone` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
-    [Origen y Destino \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_viajes`)]],
+    [Origen y Destino \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_trips`)]],
     [#total-zones zonas urbanas de Managua. Estrato socioeconómico, nivel ordinal (1--4), distrito, coordenadas centroides, radio de cobertura, base fare zonal.],
 
     [`dim_quadrants`],
@@ -55,19 +55,19 @@
     [`dim_weather`],
     [Conformed Dimension],
     [`sk_weather` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
-    [`sk_weather` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_viajes`)]],
+    [`sk_weather` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_trips`)]],
     [#total-weather-days días del ciclo 2024. Precipitación (mm), temperatura (°C), índice y nivel de congestión vial, condición de cielo, indicador de lluvia, estacionalidad y riesgo de escorrentía.],
 
     [`dim_users`],
     [Conformed Dimension],
     [`sk_user` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
-    [`sk_user` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_viajes`)]],
+    [`sk_user` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_trips`)]],
     [Pasajeros registrados. Preferencia de pago (efectivo vs digital), calificación histórica promedio, segmento de reputación y antigüedad.],
 
     [`dim_drivers`],
     [Conformed Dimension],
     [`sk_driver` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
-    [`sk_driver` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_viajes`)]],
+    [`sk_driver` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_trips`)]],
     [Socios de la flota. Modalidad vehicular, modelo, año, tasa de aceptación, servicios acumulados de mantenimiento, costo de taller y horas de inactividad.],
 
     [`dim_campaigns`],

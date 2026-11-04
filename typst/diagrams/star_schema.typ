@@ -69,8 +69,8 @@
       ([], [season], text(fill: rgb("#64748b"))[text]),
     ))),
 
-    // --- FILA CENTRAL: fct_viajes (HECHO ATÓMICO) en (1, 1) ---
-    node((1, 1), db-table("fct_viajes", "FACT TABLE", rgb("#1e1b4b"), rgb("#4338ca"), width: 152pt, (
+    // --- FILA CENTRAL: fct_trips (HECHO ATÓMICO) en (1, 1) ---
+    node((1, 1), db-table("fct_trips", "FACT TABLE", rgb("#1e1b4b"), rgb("#4338ca"), width: 152pt, (
       (pk-tag, text(weight: "bold")[sk_trip], text(fill: rgb("#64748b"))[text]),
       (fk-tag, [sk_zone_origin], text(fill: rgb("#64748b"))[text]),
       (fk-tag, [sk_zone_destination], text(fill: rgb("#64748b"))[text]),

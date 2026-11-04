@@ -106,10 +106,10 @@ models:
               to: ref('dim_zones')
               field: sk_zone
 
-  - name: fct_viajes
+  - name: fct_trips
     description: "Atomic trip fact table for dynamic pricing and cancellation analysis"
     columns:
-      - name: sk_viaje
+      - name: sk_trip
         description: "Surrogate primary key (MD5)"
         tests:
           - unique

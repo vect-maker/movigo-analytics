@@ -44,7 +44,7 @@ def generate_density_plot(
         # 1. Fetch completed and cancelled trip origins within valid Managua metropolitan bounds
         completed_coords = con.execute("""
             SELECT cast(origin_longitude as double), cast(origin_latitude as double)
-            FROM fct_viajes
+            FROM fct_trips
             WHERE is_completed = true
               AND origin_latitude BETWEEN 12.000 AND 12.200
               AND origin_longitude BETWEEN -86.360 AND -86.130;
@@ -52,7 +52,7 @@ def generate_density_plot(
 
         cancelled_coords = con.execute("""
             SELECT cast(origin_longitude as double), cast(origin_latitude as double)
-            FROM fct_viajes
+            FROM fct_trips
             WHERE is_cancelled = true
               AND origin_latitude BETWEEN 12.000 AND 12.200
               AND origin_longitude BETWEEN -86.360 AND -86.130;
@@ -81,7 +81,7 @@ def generate_density_plot(
                 sum(case when v.is_cancelled then 1 else 0 end) as cancelados,
                 round(cast(sum(case when v.is_cancelled then 1 else 0 end) as double) * 100.0 / nullif(count(v.trip_id), 0), 2) as tasa_cancelacion_pct
             FROM dim_zones z
-            LEFT JOIN fct_viajes v ON z.sk_zone = v.sk_zone_origin
+            LEFT JOIN fct_trips v ON z.sk_zone = v.sk_zone_origin
             GROUP BY z.zone_id, z.zone_name, z.socioeconomic_stratum
             ORDER BY total_solicitudes DESC;
         """).fetchall()

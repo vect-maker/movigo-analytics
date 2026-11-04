@@ -1,7 +1,7 @@
 {
   "warehouse": {
     "rows": {
-      "fct_viajes": 77487,
+      "fct_trips": 77487,
       "dim_zones": 24,
       "dim_quadrants": 298,
       "dim_weather": 366,

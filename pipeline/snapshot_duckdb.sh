@@ -37,7 +37,7 @@ LOAD postgres;
 ATTACH 'dbname=${PGDATABASE} host=${PGHOST} port=${PGPORT} user=${PGUSER} password=${PGPASSWORD} sslmode=${PGSSLMODE}' AS azure_pg (TYPE POSTGRES, READ_ONLY);
 
 -- Tablas Dimensionales y de Hechos en Inglés (Marts Layer)
-CREATE OR REPLACE TABLE fct_viajes AS SELECT * FROM azure_pg.analytics.fct_viajes;
+CREATE OR REPLACE TABLE fct_trips AS SELECT * FROM azure_pg.analytics.fct_trips;
 CREATE OR REPLACE TABLE dim_zones AS SELECT * FROM azure_pg.analytics.dim_zones;
 CREATE OR REPLACE TABLE dim_quadrants AS SELECT * FROM azure_pg.analytics.dim_quadrants;
 CREATE OR REPLACE TABLE dim_weather AS SELECT * FROM azure_pg.analytics.dim_weather;
@@ -46,19 +46,20 @@ CREATE OR REPLACE TABLE dim_drivers AS SELECT * FROM azure_pg.analytics.dim_driv
 CREATE OR REPLACE TABLE dim_campaigns AS SELECT * FROM azure_pg.analytics.dim_campaigns;
 
 -- Limpieza de vistas o tablas legadas
-DROP VIEW IF EXISTS dim_zonas;
-DROP VIEW IF EXISTS dim_clima;
-DROP VIEW IF EXISTS dim_conductores;
-DROP VIEW IF EXISTS dim_campanias;
-DROP VIEW IF EXISTS dim_usuarios;
-DROP VIEW IF EXISTS dim_cuadrantes;
-DROP VIEW IF EXISTS fct_trips;
+DROP TABLE IF EXISTS fct_viajes;
+DROP VIEW IF EXISTS fct_viajes;
 DROP TABLE IF EXISTS dim_zonas;
+DROP VIEW IF EXISTS dim_zonas;
 DROP TABLE IF EXISTS dim_clima;
+DROP VIEW IF EXISTS dim_clima;
 DROP TABLE IF EXISTS dim_conductores;
+DROP VIEW IF EXISTS dim_conductores;
 DROP TABLE IF EXISTS dim_campanias;
+DROP VIEW IF EXISTS dim_campanias;
 DROP TABLE IF EXISTS dim_usuarios;
+DROP VIEW IF EXISTS dim_usuarios;
 DROP TABLE IF EXISTS dim_cuadrantes;
+DROP VIEW IF EXISTS dim_cuadrantes;
 
 CHECKPOINT;
 EOF
