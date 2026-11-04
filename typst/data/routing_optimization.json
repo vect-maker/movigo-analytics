@@ -534,11 +534,11 @@
   ],
   "empirical_benchmark": {
     "dry_baseline": {
-      "trip_count": 19752,
-      "avg_distance_km": 8.9,
-      "avg_duration_min": 23.94,
-      "avg_speed_kmh": 21.85,
-      "cancellation_rate_pct": 36.02
+      "trip_count": 52001,
+      "avg_distance_km": 8.94,
+      "avg_duration_min": 24.13,
+      "avg_speed_kmh": 21.82,
+      "cancellation_rate_pct": 36.37
     },
     "storm_flooded": {
       "trip_count": 461,

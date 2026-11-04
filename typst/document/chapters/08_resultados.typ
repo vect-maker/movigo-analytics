@@ -4,7 +4,7 @@
 #import "../../data_bindings.typ": (
   total-trips-fmt, total-cancellations-fmt, total-completions-fmt, cancellation-rate, avg-surge,
   avg-final-fare, avg-distance-km, avg-wait-time-min, total-users, total-drivers, total-zones,
-  total-quadrants, total-weather-days, total-campaigns, dbt-total-tests, dbt-staging-models,
+  total-quadrants, total-weather-days, total-weather-observations-fmt, total-campaigns, dbt-total-tests, dbt-staging-models,
   dbt-mart-models, dbt-tests-unique, dbt-tests-not-null, dbt-tests-relationships,
   dbt-tests-accepted-values, inv-integrity, regression-n-total, regression-n-train, regression-n-test,
   m1-b0, m1-b1, m1-r2, m1-r2-train, m1-mae, m1-rmse, m1-ci-b1-low, m1-ci-b1-upp, m1-epochs,
@@ -33,7 +33,7 @@ El primer objetivo específico consistió en consolidar un repositorio analític
 
 Las fuentes llegaron separadas. La API expone siete conjuntos que abarcan zonas, usuarios, conductores, campañas, clima, viajes y telemetría, describiendo el mismo servicio desde ángulos distintos. El flujo de extracción, carga y transformación los recuperó con paginación controlada, los serializó en archivos columnares Parquet y los cargó en un esquema relacional normalizado. Sobre esa base, la capa de transformación construyó el modelo dimensional. La elección no es estética: un esquema en estrella permite que una consulta analítica cruce el viaje con la zona, el clima o el usuario mediante una sola unión, en lugar de recorrer las tablas normalizadas de origen, siguiendo los principios del modelado dimensional de Kimball @kimball2013.
 
-El resultado es una tabla de hechos con #total-trips-fmt registros (uno por cada intento de viaje de 2024, sin muestreo) y seis dimensiones que describen a #total-users pasajeros, #total-drivers conductores, #total-zones zonas urbanas, #total-quadrants cuadrantes, #total-weather-days días de clima y #total-campaigns campañas de incentivos (@tbl-data-inventory). La tabla de hechos conserva el grano atómico; las dimensiones aportan el contexto que hace legible cada registro: quién viajó, desde dónde, hacia dónde, bajo qué clima y dentro de qué campaña.
+El resultado es una tabla de hechos con #total-trips-fmt registros (uno por cada intento de viaje de 2024, sin muestreo) y seis dimensiones que describen a #total-users pasajeros, #total-drivers conductores, #total-zones zonas urbanas, #total-quadrants cuadrantes, #total-weather-observations-fmt registros horarios de microclima por cuadrante (#total-weather-days días de observación) y #total-campaigns campañas de incentivos (@tbl-data-inventory). La tabla de hechos conserva el grano atómico; las dimensiones aportan el contexto que hace legible cada registro: quién viajó, desde dónde, hacia dónde, bajo qué microclima en su cuadrante y dentro de qué campaña.
 
 #fig-data-inventory <tbl-data-inventory>
 

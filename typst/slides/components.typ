@@ -582,3 +582,56 @@
     )
   ]
 }
+
+/// Layout de figura o diagrama superior grande con tarjeta explicativa inferior
+#let diagram-card-layout(
+  image-content,
+  title: [],
+  body: [],
+  icon: none,
+  diagram-height: 295pt,
+  accent: color-accent,
+) = {
+  align(center, block(
+    width: 100%,
+    height: diagram-height,
+    fill: white,
+    stroke: 1pt + color-card-stroke,
+    radius: 8pt,
+    inset: (x: 10pt, y: 8pt),
+    align(center + horizon, image-content)
+  ))
+
+  v(10pt)
+
+  block(
+    width: 100%,
+    fill: color-card-bg,
+    stroke: (left: 3.5pt + accent, rest: 0.8pt + color-card-stroke),
+    radius: 6pt,
+    inset: (x: 16pt, y: 11pt),
+    [
+      #grid(
+        columns: if icon != none { (28pt, 1fr) } else { (1fr,) },
+        gutter: 14pt,
+        align: horizon,
+        if icon != none [
+          #box(
+            fill: color-primary,
+            radius: 4pt,
+            width: 28pt,
+            height: 28pt,
+            align(center + horizon, box(width: 16pt, icon))
+          )
+        ],
+        stack(
+          spacing: 3pt,
+          if title != [] [
+            #text(size: 11.5pt, weight: "bold", fill: color-primary, font: font-heading, title)
+          ],
+          text(size: 10.5pt, fill: color-body, font: font-body, body)
+        )
+      )
+    ]
+  )
+}

@@ -12,7 +12,8 @@ SELECT
     ROUND(AVG(wait_time_minutes), 2) AS tiempo_espera_promedio_min,
     -- Dimensional system counts
     (SELECT COUNT(*) FROM dim_zones) AS total_zonas,
-    (SELECT COUNT(*) FROM dim_weather) AS total_dias_clima,
+    (SELECT COUNT(DISTINCT date) FROM dim_weather) AS total_dias_clima,
+    (SELECT COUNT(*) FROM dim_weather) AS total_observaciones_clima,
     (SELECT COUNT(*) FROM dim_users) AS total_usuarios,
     (SELECT COUNT(*) FROM dim_drivers) AS total_conductores,
     (SELECT COUNT(*) FROM dim_campaigns) AS total_campanias

@@ -39,17 +39,32 @@ models:
               field: sk_zone
 
   - name: dim_weather
-    description: "Conformed daily time series dimension of microclimate, channel runoff, and congestion"
+    description: "Conformed hourly microclimate, channel runoff, and congestion dimension discretised by territorial quadrant"
     columns:
       - name: sk_weather
         description: "Surrogate primary key (MD5)"
         tests:
           - unique
           - not_null
+      - name: weather_id
+        description: "Natural operational weather identifier"
+        tests:
+          - unique
+          - not_null
+      - name: sk_quadrant
+        description: "Foreign key to dim_quadrants"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_quadrants')
+              field: sk_quadrant
       - name: date
         description: "Calendar date"
         tests:
-          - unique
+          - not_null
+      - name: hour
+        description: "Observation hour (0-23)"
+        tests:
           - not_null
       - name: season
         description: "Climatic season in Managua: rainy vs dry"

@@ -4,7 +4,7 @@
       "fct_trips": 77487,
       "dim_zones": 24,
       "dim_quadrants": 298,
-      "dim_weather": 366,
+      "dim_weather": 2617632,
       "dim_users": 800,
       "dim_drivers": 150,
       "dim_campaigns": 12
@@ -39,11 +39,11 @@
   "dbt": {
     "staging_models": 14,
     "mart_models": 7,
-    "total_tests": 104,
+    "total_tests": 109,
     "tests_by_type": {
       "unique": 43,
-      "not_null": 53,
-      "relationships": 6,
+      "not_null": 57,
+      "relationships": 7,
       "accepted_values": 2
     }
   }

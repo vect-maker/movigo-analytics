@@ -17,7 +17,7 @@
     [`dim_drivers`], [Conformed Dimension], [Conductor y su vehículo], [#fmt-int(inv-rows.dim_drivers)],
     [`dim_zones`], [Conformed Dimension], [Zona urbana de Managua], [#fmt-int(inv-rows.dim_zones)],
     [`dim_quadrants`], [Territorial Dimension], [Cuadrante de la malla territorial], [#fmt-int(inv-rows.dim_quadrants)],
-    [`dim_weather`], [Conformed Dimension], [Día calendario de 2024], [#fmt-int(inv-rows.dim_weather)],
+    [`dim_weather`], [Conformed Dimension], [Observación horaria por cuadrante], [#fmt-int(inv-rows.dim_weather)],
     [`dim_campaigns`], [Context Dimension], [Campaña de incentivos], [#fmt-int(inv-rows.dim_campaigns)],
   )
 }

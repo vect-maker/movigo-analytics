@@ -60,6 +60,7 @@ generate-diagrams:
         -v ".:/workspace:Z" \
         -w /workspace \
         {{ MERMAID_IMAGE }} \
+        -c typst/diagrams/mermaid-config.json \
         -i typst/diagrams/pipeline_architecture.mmd \
         -o typst/diagrams/pipeline_architecture.pdf \
         -s 3
@@ -67,6 +68,7 @@ generate-diagrams:
         -v ".:/workspace:Z" \
         -w /workspace \
         {{ MERMAID_IMAGE }} \
+        -c typst/diagrams/mermaid-config.json \
         -i typst/diagrams/dbt_lineage.mmd \
         -o typst/diagrams/dbt_lineage.pdf \
         -s 3

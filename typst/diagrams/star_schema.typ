@@ -61,12 +61,12 @@
 
     node((2, 0), db-table("dim_weather", "DIMENSION", rgb("#0369a1"), rgb("#0284c7"), (
       (pk-tag, text(weight: "bold")[sk_weather], text(fill: rgb("#64748b"))[text]),
+      (fk-tag, [sk_quadrant], text(fill: rgb("#64748b"))[text]),
       ([], [date], text(fill: rgb("#64748b"))[date]),
+      ([], [hour], text(fill: rgb("#64748b"))[int]),
       ([], [precipitation_mm], text(fill: rgb("#64748b"))[decimal]),
-      ([], [temperature_c], text(fill: rgb("#64748b"))[decimal]),
       ([], [congestion_index], text(fill: rgb("#64748b"))[decimal]),
       ([], [has_rain], text(fill: rgb("#64748b"))[boolean]),
-      ([], [season], text(fill: rgb("#64748b"))[text]),
     ))),
 
     // --- FILA CENTRAL: fct_trips (HECHO ATÓMICO) en (1, 1) ---

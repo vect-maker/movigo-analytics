@@ -33,7 +33,7 @@ select
         else null 
     end as sk_driver,
     md5(cast(t.user_id as text)) as sk_user,
-    md5(cast(t.request_date as text)) as sk_weather,
+    md5(cast(wq.weather_id as text)) as sk_weather,
 
     -- Spatial quadrants, districts, and GPS coordinates
     t.origin_quadrant_id,

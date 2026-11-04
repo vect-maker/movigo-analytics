@@ -86,7 +86,7 @@ select
     md5(cast(qd.zone_id as text)) as sk_zone_destination,
     case when t.driver_id is not null then md5(cast(t.driver_id as text)) else null end as sk_driver,
     md5(cast(t.user_id as text)) as sk_user,
-    md5(cast(t.request_date as text)) as sk_weather,
+    md5(cast(wq.weather_id as text)) as sk_weather,
     -- Métricas de tarificación dinámica y estado de cancelación
     p.base_fare, p.surge_multiplier, p.has_surge, p.final_fare, p.surge_cost_nio,
     t.trip_status, t.is_cancelled, t.wait_time_minutes

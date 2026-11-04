@@ -23,7 +23,7 @@ El diseño del almacén sigue rigurosamente los principios de Ralph Kimball @kim
 + *Conformed Dimensions y Jerarquía Territorial:* Aportan el contexto analítico y los atributos de filtrado:
   - `dim_zones`: Caracteriza las #total-zones zonas urbanas de Managua mediante su estratificación socioeconómica, coordenadas de centroide y base fare (@tbl-strata-summary; catálogo detallado en Apéndice B, @tbl-zones-catalog). Opera como role-playing dimension, enlazándose de forma simultánea con el cuadrante de origen (`sk_zone_origin`) y el cuadrante de destino (`sk_zone_destination`).
   - `dim_quadrants`: Contiene la discretización espacial celular en 298 cuadrantes territoriales, incorporando elevación topográfica y riesgo de exposición hidrológica ante cauces.
-  - `dim_weather`: Registra las observaciones meteorológicas diarias (precipitación en milímetros, temperatura, estacionalidad climática y congestion index).
+  - `dim_weather`: Registra las observaciones meteorológicas y de congestión horarias discretizadas por cuadrante espacial (precipitación en milímetros, temperatura, riesgo de escorrentía en cauces y congestion index local), preservando la resolución microclimática necesaria para capturar fenómenos hidrológicos focalizados.
   - `dim_users` y `dim_drivers`: Agrupan atributos de comportamiento, modalidades vehiculares (`movigo_estandar`, `movigo_comfort`, `movigo_moto`) y tasas de retención.
   - `dim_campaigns`: Registra el catálogo de programas de incentivos y bonos para conductores.
 + *Surrogate Keys Determinísticas (MD5):* Para garantizar idempotencia e independencia frente a cambios en los identificadores del sistema origen, los enlaces dimensionales se resuelven mediante surrogate keys generadas como `md5(cast(id as text))`.

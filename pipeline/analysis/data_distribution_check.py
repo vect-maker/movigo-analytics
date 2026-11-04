@@ -75,17 +75,26 @@ def main():
         FROM fct_trips;
     """).df()
 
-    # 2. Weather Metrics (dim_weather: 366 days)
+    # 2. Weather Metrics (dim_weather: hourly by quadrant aggregated to daily for cycle diagnostic)
     df_weather = con.execute("""
         SELECT
-            cast(precipitation_mm as double) AS precipitacion_mm,
-            cast(temperature_c as double) AS temperatura_c,
-            cast(congestion_index as double) AS indice_congestion
-        FROM dim_weather;
+            round(avg(precipitation_mm), 2) AS precipitacion_mm,
+            round(avg(temperature_c), 1) AS temperatura_c,
+            round(avg(congestion_index), 2) AS indice_congestion
+        FROM dim_weather
+        GROUP BY date;
     """).df()
 
-    # 3. Daily Aggregate Data (fct_trips + dim_weather)
+    # 3. Daily Aggregate Data (fct_trips + aggregated dim_weather)
     df_daily = con.execute("""
+        WITH daily_weather AS (
+            SELECT
+                date,
+                round(avg(precipitation_mm), 2) AS precipitation_mm,
+                round(avg(congestion_index), 2) AS congestion_index
+            FROM dim_weather
+            GROUP BY date
+        )
         SELECT
             v.request_date AS fecha,
             count(*) AS total_viajes,
@@ -95,7 +104,7 @@ def main():
             cast(c.precipitation_mm as double) AS precipitacion_mm,
             cast(c.congestion_index as double) AS indice_congestion
         FROM fct_trips v
-        JOIN dim_weather c ON v.request_date = c.date
+        JOIN daily_weather c ON v.request_date = c.date
         GROUP BY v.request_date, c.precipitation_mm, c.congestion_index
         ORDER BY v.request_date;
     """).df()

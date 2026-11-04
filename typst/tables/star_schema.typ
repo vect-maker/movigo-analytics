@@ -5,6 +5,7 @@
   total-trips-fmt,
   total-zones,
   total-weather-days,
+  total-weather-observations-fmt,
   total-campaigns,
 )
 
@@ -56,7 +57,7 @@
     [Conformed Dimension],
     [`sk_weather` \ #text(size: raw-size, fill: rgb("#64748b"))[(Hash MD5)]],
     [`sk_weather` \ #text(size: raw-size, fill: rgb("#64748b"))[(`fct_trips`)]],
-    [#total-weather-days días del ciclo 2024. Precipitación (mm), temperatura (°C), índice y nivel de congestión vial, condición de cielo, indicador de lluvia, estacionalidad y riesgo de escorrentía.],
+    [#total-weather-observations-fmt registros horarios por cuadrante (#total-weather-days días de 2024). Precipitación (mm), temperatura (°C), congestión vial, condición de cielo, indicador de lluvia, estacionalidad y riesgo de escorrentía.],
 
     [`dim_users`],
     [Conformed Dimension],

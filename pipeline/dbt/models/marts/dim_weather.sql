@@ -3,25 +3,34 @@ with source as (
 )
 
 select
-    md5(cast(date as text)) as sk_weather,
+    -- Surrogate primary key
+    md5(cast(weather_id as text)) as sk_weather,
+    weather_id,
+
+    -- Dimensional spatial foreign key
+    md5(cast(quadrant_id as text)) as sk_quadrant,
+    quadrant_id,
+
+    -- Temporal attributes
+    recorded_at,
     date,
+    hour,
+
+    -- Weather metrics and classifications
     precipitation_mm,
-    avg_channel_runoff_mm,
-    max_channel_runoff_mm,
-    case
-        when max_channel_runoff_mm < 5.0 then 'bajo'
-        when max_channel_runoff_mm < 15.0 then 'medio'
-        else 'critico'
-    end as channel_runoff_risk,
+    channel_runoff_mm,
+    channel_runoff_risk,
+    rain_intensity,
+    precipitation_category,
+    has_rain,
     temperature_c,
     congestion_index,
-    sky_condition,
-    has_rain,
-    precipitation_category,
-    rain_intensity,
     congestion_level,
+    flooded_roads,
     has_flooded_roads,
-    -- Estacionalidad climática de Managua: Lluvia (Mayo a Octubre) vs Seca (Noviembre a Abril)
+    sky_condition,
+
+    -- Seasonal and calendar temporal features
     case 
         when extract(month from date) between 5 and 10 then 'rainy'
         else 'dry'
@@ -31,4 +40,4 @@ select
     extract(isodow from date)::int as iso_day_of_week,
     case when extract(isodow from date) in (6, 7) then true else false end as is_weekend
 from source
-order by date
+order by weather_id
