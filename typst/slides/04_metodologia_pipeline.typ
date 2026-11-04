@@ -20,11 +20,11 @@
 
 #v(10pt)
 
-// 2. NIVEL INFERIOR: Tres Columnas Arquitectónicas de Profundidad Técnica
+// 2. NIVEL INFERIOR: Tres Columnas de Infraestructura y Almacenamiento Físico
 #grid(
   columns: (1fr, 1fr, 1fr),
   gutter: 12pt,
-  // Columna 1: Ingesta y Persistencia Raw
+  // Columna 1: Extracción API REST y Buffer Apache Parquet
   block(
     width: 100%,
     height: 215pt,
@@ -33,38 +33,38 @@
     radius: 6pt,
     inset: (x: 14pt, y: 12pt),
     [
-      #text(size: 11pt, weight: "bold", fill: rgb("#1e3a8a"), font: font-heading)[I. Ingesta y Datos Raw]
+      #text(size: 11pt, weight: "bold", fill: rgb("#1e3a8a"), font: font-heading)[I. Ingesta Asíncrona & Buffer]
       #v(2pt)
-      #text(size: 8.5pt, fill: color-muted, font: font-heading)[EXTRACCIÓN REST & AZURE POSTGRESQL]
+      #text(size: 8.5pt, fill: color-muted, font: font-heading)[EXTRACCIÓN REST & APACHE PARQUET]
       #v(6pt)
       #text(size: 9.2pt, fill: color-body, font: font-body)[
-        • *Extracción por cursor:* Consumo sistemático de la API REST FastAPI con paginación dinámica (`limit=200`, `offset`).\
-        • *Buffer Apache Parquet:* Serialización intermedia columnar garantizando inmutabilidad, compresión y desacoplamiento.\
-        • *Azure PostgreSQL (OLTP):* Esquema `raw` (3NF) con 7 tablas normalizadas, casteo de tipos e inserción por bloques con TLS.
+        • *Extracción por cursor:* Consumo sistemático de los 7 endpoints en FastAPI con paginación optimizada (`limit=200`, `offset`).\
+        • *Buffer Apache Parquet:* Serialización intermedia columnar en disco que garantiza inmutabilidad, compresión Snappy y desacoplamiento.\
+        • *Tolerancia a fallos:* Aislamiento de la API ante interrupciones de red sin reintentos destructivos ni pérdida de estado.
       ]
     ]
   ),
-  // Columna 2: Transformación dbt Core Kimball
+  // Columna 2: Persistencia Relacional OLTP en Azure PostgreSQL
   block(
     width: 100%,
     height: 215pt,
     fill: color-card-bg,
-    stroke: (top: 3.5pt + rgb("#d97706"), rest: 0.8pt + color-card-stroke),
+    stroke: (top: 3.5pt + rgb("#144e45"), rest: 0.8pt + color-card-stroke),
     radius: 6pt,
     inset: (x: 14pt, y: 12pt),
     [
-      #text(size: 11pt, weight: "bold", fill: rgb("#78350f"), font: font-heading)[II. Transformación dbt Core]
+      #text(size: 11pt, weight: "bold", fill: rgb("#144e45"), font: font-heading)[II. Persistencia Relacional OLTP]
       #v(2pt)
-      #text(size: 8.5pt, fill: color-muted, font: font-heading)[STAGING 1:1 & KIMBALL STAR SCHEMA]
+      #text(size: 8.5pt, fill: color-muted, font: font-heading)[ESQUEMA RAW 3NF EN AZURE POSTGRESQL]
       #v(6pt)
       #text(size: 9.2pt, fill: color-body, font: font-body)[
-        • *Staging lógicas:* Vistas 1:1 puras con tipado estricto, binarización de fallos y descarte de dependencias cruzadas.\
-        • *Esquema en estrella Kimball:* Fact table atómica `fct_trips` consolidando 77,487 viajes auditados con llaves subrogadas MD5.\
-        • *Conformed Dimensions:* Dimensiones de zonificación WGS84, severidad pluvial diaria y segmentación socioeconómica.
+        • *Esquema 3NF normalizado:* 7 tablas relacionales tipadas que albergan transacciones, actores, flotas y telemetría.\
+        • *Carga masiva por bloques:* Inserción vectorizada por lotes mediante conexiones seguras cifradas con TLS/SSL.\
+        • *Integridad de entrada:* Llaves primarias seriales y restricciones de tipo que impiden anomalías previas a la analítica.
       ]
     ]
   ),
-  // Columna 3: Motor Analítico y DataOps
+  // Columna 3: Motor Analítico Vectorizado DuckDB & DataOps
   block(
     width: 100%,
     height: 215pt,
@@ -73,13 +73,13 @@
     radius: 6pt,
     inset: (x: 14pt, y: 12pt),
     [
-      #text(size: 11pt, weight: "bold", fill: rgb("#064e3b"), font: font-heading)[III. Motor DuckDB & DataOps]
+      #text(size: 11pt, weight: "bold", fill: rgb("#064e3b"), font: font-heading)[III. Motor OLAP & DataOps]
       #v(2pt)
-      #text(size: 8.5pt, fill: color-muted, font: font-heading)[COMPUTACIÓN OLAP & REPRODUCIBILIDAD]
+      #text(size: 8.5pt, fill: color-muted, font: font-heading)[DUCKDB IN-PROCESS & COMPILACIÓN ZERO-DRIFT]
       #v(6pt)
       #text(size: 9.2pt, fill: color-body, font: font-body)[
-        • *DuckDB In-Process:* Motor columnar analítico de ultra baja latencia con consultas OLAP vectorizadas sobre Parquet.\
-        • *Validación continua DataOps:* Pruebas automáticas de unicidad, no-nulidad e integridad referencial (`dbt test` y `pytest`).\
+        • *DuckDB columnar:* Motor OLAP embebido de ultra baja latencia para consultas analíticas vectorizadas sobre Parquet.\
+        • *Aislamiento en contenedores:* Ejecución determinista orquestada con Podman para garantizar paridad entre entornos.\
         • *Compilación Zero-Drift:* Enlace directo de métricas y coeficientes a Typst sin transcripción manual ni deriva de datos.
       ]
     ]

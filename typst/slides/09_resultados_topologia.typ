@@ -4,7 +4,7 @@
 = Topología de la red vial urbana modelada en Managua
 
 #slide-single-chart(
-  speaker: "C",
+  speaker: "D",
   accent: color-primary,
   icon: slide-icons.map,
   chart: image("../graphs/urban_network_topology.png", height: 310pt, fit: "contain"),

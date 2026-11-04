@@ -1,5 +1,8 @@
 #import "template.typ": *
 #import "components.typ": *
+#import "../data_bindings.typ": (
+  total-trips-fmt, dbt-total-tests, dbt-coverage-pct, fmt-dec,
+)
 
 = Linaje de transformación modular y esquema Kimball en dbt Core
 
@@ -38,8 +41,8 @@
           #text(size: 11pt, weight: "bold", fill: rgb("#1e3a8a"), font: font-heading)[I. Ingesta Raw (PostgreSQL)]
           #v(3pt)
           #text(size: 9.3pt, fill: color-body, font: font-body)[
-            • *Esquema 3NF inmutable:* 100,000 registros transaccionales extraídos sin mutación previa.\
-            • *Multi-dominio:* Desacoplamiento de viajes, pagos, telemetría y meteorología.
+            • *Esquema 3NF inmutable:* #total-trips-fmt solicitudes operacionales persistidas sin mutación destructiva.\
+            • *Multi-dominio:* Separación estricta de viajes, tarifas, telemetría y meteorología.
           ]
         ]
       ),
@@ -54,8 +57,8 @@
           #text(size: 11pt, weight: "bold", fill: rgb("#78350f"), font: font-heading)[II. Staging dbt Core (Vistas 1:1)]
           #v(3pt)
           #text(size: 9.3pt, fill: color-body, font: font-body)[
-            • *Tipado estricto:* Normalización semántica en inglés y binarización de `is_cancelled`.\
-            • *Espacial & Pluvial:* 24 zonas, 298 cuadrantes WGS84 y cota de riesgo por cauces.
+            • *Tipado estricto:* Normalización semántica de nombres, fechas ISO y binarización de fallos (`is_cancelled`).\
+            • *Malla espacial WGS84:* 24 zonas, 298 cuadrantes e intercepción de cauces pluviales.
           ]
         ]
       ),
@@ -67,11 +70,11 @@
         radius: 6pt,
         inset: (x: 12pt, y: 9pt),
         [
-          #text(size: 11pt, weight: "bold", fill: rgb("#064e3b"), font: font-heading)[III. Marts Dimensional (DuckDB)]
+          #text(size: 11pt, weight: "bold", fill: rgb("#064e3b"), font: font-heading)[III. Marts Dimensional & Pruebas]
           #v(3pt)
           #text(size: 9.3pt, fill: color-body, font: font-body)[
-            • *Kimball Star Schema:* Fact table `fct_trips` (77,487 viajes auditados) y conformed dims.\
-            • *OLAP zero-copy:* Surrogate keys conformadas (MD5) para computación analítica.
+            • *Kimball Star Schema:* Fact table `fct_trips` a grano atómico con surrogate keys MD5 y conformed dims.\
+            • *Gobernanza dbt:* #fmt-dec(dbt-coverage-pct, digits: 0)% de cobertura con #str(dbt-total-tests) pruebas automáticas de unicidad y FKs.
           ]
         ]
       )

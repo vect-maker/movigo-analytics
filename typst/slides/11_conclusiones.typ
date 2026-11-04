@@ -7,7 +7,7 @@
 
 = Conclusiones de la investigación
 
-#speaker-marker("D")
+#speaker-marker("A")
 
 #grid(
   columns: (1fr, 1fr, 1fr),

@@ -4,7 +4,7 @@
 = Evasión adaptativa de inundaciones y ruteo con Dijkstra
 
 #slide-single-chart(
-  speaker: "C",
+  speaker: "D",
   accent: color-accent,
   icon: slide-icons.shield,
   chart: image("../graphs/urban_network_dijkstra.png", height: 310pt, fit: "contain"),
