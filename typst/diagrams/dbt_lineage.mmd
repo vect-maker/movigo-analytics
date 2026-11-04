@@ -1,0 +1,97 @@
+%% Diagrama de Linaje y Modelado Dimensional en dbt Core - MoviGo
+flowchart LR
+    %% =========================================================================
+    %% ESTILOS VISUALES Y PALETA DE COLORES
+    %% =========================================================================
+    classDef default fill:#F8FAFC,stroke:#334155,stroke-width:1.5px,color:#0F172A,font-size:11px;
+    classDef rawNode fill:#EFF6FF,stroke:#2563EB,stroke-width:1.8px,color:#1E3A8A;
+    classDef stgNode fill:#FEF3C7,stroke:#D97706,stroke-width:1.8px,color:#78350F;
+    classDef fctNode fill:#ECFDF5,stroke:#059669,stroke-width:2.2px,color:#064E3B;
+    classDef dimNode fill:#F1F5F9,stroke:#475569,stroke-width:1.8px,color:#1E293B;
+
+    %% =========================================================================
+    %% CAPA 1: RAW LAYER (POSTGRESQL - ESQUEMA 3NF)
+    %% =========================================================================
+    subgraph RAW ["<b>I. RAW LAYER (PostgreSQL)</b>"]
+        direction TB
+        R_TRIP[("`**raw_viajes**
+        • transacciones operativas
+        • telemetría y tarifas`")]:::rawNode
+
+        R_GEO[("`**raw_zonas_urbanas**
+        • raw_cuadrantes
+        • topología espacial`")]:::rawNode
+
+        R_CLIMA[("`**raw_clima_cuadrantes**
+        • series meteorológicas
+        • precipitación horaria`")]:::rawNode
+
+        R_ACTORS[("`**raw_usuarios / conductores**
+        • telemetría vehicular
+        • incentivos y bonos`")]:::rawNode
+    end
+
+    %% =========================================================================
+    %% CAPA 2: STAGING LAYER (DBT CORE - VISTAS 1:1)
+    %% =========================================================================
+    subgraph STG ["<b>II. STAGING LAYER (dbt Views)</b>"]
+        direction TB
+        S_TRIP["`**stg_trips & payments**
+        • binarización is_cancelled
+        • desglose de surge_multiplier
+        • wait_time_minutes en fallo`"]:::stgNode
+
+        S_GEO["`**stg_urban_zones & quadrants**
+        • normalización 24 zonas
+        • 298 cuadrantes y cota
+        • riesgo de inundación`"]:::stgNode
+
+        S_CLIMA["`**stg_weather_daily**
+        • agregación diaria de lluvia
+        • categorización de tormenta
+        • congestion_index exógeno`"]:::stgNode
+
+        S_ACTORS["`**stg_users, drivers & campaigns**
+        • perfil socioeconómico
+        • flota vehicular y mantenimiento
+        • presupuestos de incentivos`"]:::stgNode
+    end
+
+    %% =========================================================================
+    %% CAPA 3: MARTS LAYER (KIMBALL STAR SCHEMA - TABLAS)
+    %% =========================================================================
+    subgraph MARTS ["<b>III. MARTS LAYER (Star Schema)</b>"]
+        direction TB
+        F_TRIP["`**fct_viajes (Fact Table)**
+        • Grain atómico: 1 fila por viaje
+        • Surrogate keys (MD5)
+        • Métricas operacionales y surge
+        • Variable dependiente is_cancelled`"]:::fctNode
+
+        D_ZONES["`**dim_zones & dim_quadrants**
+        • Role-playing: origen y destino
+        • Base fare y estratificación urbana`"]:::dimNode
+
+        D_CLIMA["`**dim_weather**
+        • Régimen hídrico y severidad pluvial`"]:::dimNode
+
+        D_ACTORS["`**dim_users, drivers & campaigns**
+        • Segmentación de usuarios y flota`"]:::dimNode
+    end
+
+    %% =========================================================================
+    %% CONEXIONES DE FLUJO Y TRANSFORMACIÓN
+    %% =========================================================================
+    R_TRIP -->|Limpieza y Tipado| S_TRIP
+    R_GEO -->|Normalización| S_GEO
+    R_CLIMA -->|Agregación Diaria| S_CLIMA
+    R_ACTORS -->|Estandarización| S_ACTORS
+
+    S_TRIP ==>|Grain Atómico + MD5 SK| F_TRIP
+    S_GEO -->|Conformed Dim| D_ZONES
+    S_CLIMA -->|Conformed Dim| D_CLIMA
+    S_ACTORS -->|Conformed Dim| D_ACTORS
+
+    D_ZONES -.->|Integridad Referencial cruzada| F_TRIP
+    D_CLIMA -.->|Integridad Referencial cruzada| F_TRIP
+    D_ACTORS -.->|Integridad Referencial cruzada| F_TRIP

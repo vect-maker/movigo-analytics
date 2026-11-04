@@ -63,7 +63,14 @@ generate-diagrams:
         -i typst/diagrams/pipeline_architecture.mmd \
         -o typst/diagrams/pipeline_architecture.pdf \
         -s 3
-    @echo "✅ Diagrama vectorial de arquitectura generado en typst/diagrams/pipeline_architecture.pdf"
+    podman run --rm --user 0:0 \
+        -v ".:/workspace:Z" \
+        -w /workspace \
+        {{ MERMAID_IMAGE }} \
+        -i typst/diagrams/dbt_lineage.mmd \
+        -o typst/diagrams/dbt_lineage.pdf \
+        -s 3
+    @echo "✅ Diagramas vectoriales generados en typst/diagrams/*.pdf"
 
 # Configurar entorno virtual local (.venv) instalando uv automáticamente si no existe y dependencias
 setup-env:
