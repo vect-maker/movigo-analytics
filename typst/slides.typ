@@ -13,5 +13,4 @@
 #include "slides/07_resultados_tarifa.typ"
 #include "slides/08_resultados_ruteo.typ"
 #include "slides/09_conclusiones.typ"
-#include "slides/10_recomendaciones.typ"
-#include "slides/11_cierre.typ"
+#include "slides/10_cierre.typ"
