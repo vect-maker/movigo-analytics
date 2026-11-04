@@ -517,6 +517,72 @@
   )
 }
 
+/// Generador de diapositiva con 1 gráfico grande y panel explicativo enriquecido
+#let slide-single-chart(
+  chart: none,
+  caption: [],
+  stat: [],
+  body: [],
+  insights: (),
+  icon: none,
+  speaker: none,
+  accent: color-title,
+) = {
+  slide[
+    #if speaker != none {
+      speaker-marker(speaker)
+    }
+    #v(4pt)
+    #grid(
+      columns: (480pt, 1fr),
+      gutter: 18pt,
+      align: horizon,
+      [
+        #block(
+          width: 100%,
+          fill: color-card-bg,
+          stroke: 1.1pt + color-card-stroke,
+          radius: 8pt,
+          inset: (x: 10pt, y: 10pt),
+          align(center)[
+            #chart
+            #if caption != [] [
+              #v(6pt)
+              #text(size: 9pt, fill: color-muted, font: font-body, caption)
+            ]
+          ]
+        )
+      ],
+      [
+        #stack(
+          spacing: 12pt,
+          analytical-card(icon: icon, stat: stat, body: body, accent: accent),
+          if insights.len() > 0 [
+            #block(
+              fill: color-card-bg,
+              stroke: 1pt + color-card-stroke,
+              radius: 8pt,
+              inset: (x: 12pt, y: 10pt),
+              width: 100%,
+              [
+                #text(size: 11pt, weight: "bold", fill: color-title, font: font-heading)[Implicaciones Operativas]
+                #v(4pt)
+                #line(length: 100%, stroke: 0.5pt + color-card-stroke)
+                #v(4pt)
+                #set text(size: 9.3pt, fill: color-body, font: font-body)
+                #list(
+                  spacing: 0.55em,
+                  ..insights
+                )
+              ]
+            )
+          ]
+        )
+      ]
+    )
+  ]
+}
+
 /// Generador de diapositiva con 2 gráficos alternantes (zig-zag layout)
 #let slide-dual-chart(
   // Fila 1 (arriba): Gráfico Izquierda, Análisis Derecha
