@@ -7,6 +7,6 @@
   authors: authors,
   tutor: tutor,
   career: career,
-  university: university,
+  logo: "../assets/unan-logo.jpg",
   date: date-str,
 )

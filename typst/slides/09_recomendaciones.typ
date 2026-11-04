@@ -21,7 +21,7 @@
     impact-label: [REDUCCIÓN FRICCIÓN],
     impact-stat: [-12.5%],
     impact-target: [Descenso proyectado en la tasa de cancelación por tarifa percibida como excesiva.],
-    accent: color-title,
+    accent: color-primary,
   ),
 
   policy-row(
@@ -53,6 +53,6 @@
     impact-label: [COBERTURA URBANA],
     impact-stat: [298 Cuadr.],
     impact-target: [Monitoreo integral de equidad territorial y tiempos de espera en Managua.],
-    accent: color-teal,
+    accent: color-slate-teal,
   ),
 )

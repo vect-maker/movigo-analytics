@@ -5,10 +5,10 @@
 // ============================================================
 
 #let speaker-colors = (
-  "A": rgb("#0f2942"), // Azul marino profundo (Expositor A)
-  "B": rgb("#1a4d8f"), // Azul analítico (Expositor B)
-  "C": rgb("#d9383a"), // Rojo MoviGo (Expositor C)
-  "D": rgb("#0b7285"), // Teal espacial (Expositor D)
+  "A": color-primary,    // Teal Profundo (#144e45)
+  "B": color-accent,     // Teal Vibrante (#2a9d8f)
+  "C": color-slate-teal, // Pizarra Marina (#264653)
+  "D": color-coral,      // Coral Cálido (#e76f51)
 )
 
 /// Insignia colocada en la esquina superior derecha indicando el expositor actual
@@ -159,7 +159,7 @@
           ]
         ]
       ),
-      line(length: 100%, stroke: 0.5pt + rgb("#e2e8f0")),
+      line(length: 100%, stroke: 0.5pt + color-card-stroke),
       [
         #set text(size: body-size, fill: color-body, font: font-body)
         #set par(leading: leading)
@@ -226,7 +226,7 @@
         )
       ],
       if details.len() > 0 [
-        #line(length: 100%, stroke: 0.4pt + rgb("#e2e8f0"))
+        #line(length: 100%, stroke: 0.4pt + color-card-stroke)
         #set text(size: 8.5pt, fill: color-body, font: font-body)
         #set par(leading: 0.28em)
         #for d in details [
@@ -239,8 +239,8 @@
 
 /// Flecha conectora entre nodos de flujo
 #let flow-arrow = align(center + horizon, box(
-  fill: rgb("#f1f5f9"),
-  stroke: 0.8pt + rgb("#cbd5e1"),
+  fill: color-card-bg,
+  stroke: 0.8pt + color-card-stroke,
   radius: 11pt,
   width: 22pt,
   height: 22pt,
@@ -339,7 +339,7 @@
       // 4. Veredicto principal
       text(size: 13.5pt, weight: "bold", fill: color-body, font: font-heading, verdict-headline),
       v(6pt),
-      par(leading: 0.48em)[#text(size: 11.2pt, fill: rgb("#334155"), font: font-body, verdict-body)],
+      par(leading: 0.48em)[#text(size: 11.2pt, fill: color-body, font: font-body, verdict-body)],
     )
   )
 }
@@ -510,7 +510,7 @@
         ]
       )
       #v(4pt)
-      #line(length: 100%, stroke: 0.5pt + rgb("#e2e8f0"))
+      #line(length: 100%, stroke: 0.5pt + color-card-stroke)
       #v(4pt)
       #par(leading: 0.46em)[#text(size: 10.5pt, fill: color-body, font: font-body, body)]
     ]
@@ -553,7 +553,7 @@
             #chart-fn-1
             #if caption-1 != [] [
               #v(0.2em)
-              #text(size: 8.8pt, fill: rgb("#64748b"), font: font-body, caption-1)
+              #text(size: 8.8pt, fill: color-muted, font: font-body, caption-1)
             ]
           ])
         ],
@@ -574,7 +574,7 @@
             #chart-fn-2
             #if caption-2 != [] [
               #v(0.2em)
-              #text(size: 8.8pt, fill: rgb("#64748b"), font: font-body, caption-2)
+              #text(size: 8.8pt, fill: color-muted, font: font-body, caption-2)
             ]
           ])
         ]

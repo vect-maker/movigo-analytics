@@ -2,7 +2,7 @@
 
 == Objetivo General
 
-*Analizar* la resiliencia operativa y la conectividad de la red de transporte selectivo MoviGo ante estrangulamientos viales y contingencias climáticas en el municipio de Managua durante el año 2024.
+*Diseñar e implementar* un pipeline de datos, modelos numéricos y algoritmos de ruteo para la optimización operativa de la red MoviGo en el municipio de Managua durante el año 2024.
 
 == Objetivos Específicos
 

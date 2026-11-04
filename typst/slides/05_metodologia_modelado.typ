@@ -43,7 +43,7 @@
     title: [Data-to-Document],
     subtitle: [Entorno Inmutable en Podman],
     tag: [REPRODUCIBILIDAD TOTAL],
-    accent: color-teal,
+    accent: color-slate-teal,
     details: (
       [Typst nativo para slides y paper],
       [Justfile automatizado de compilación],
@@ -87,7 +87,7 @@
     icon: slide-icons.check-circle,
     title: [Garantía Metodológica],
     subtitle: [Transparencia Algorítmica],
-    accent: color-teal,
+    accent: color-slate-teal,
     body: [
       #list(
         [*Desacoplamiento modular:* Separación entre almacenamiento, computación y visualización.],

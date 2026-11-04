@@ -15,8 +15,8 @@
     gutter: 10pt,
     // Métrica 1: Viajes Totales
     block(
-      fill: rgb("#f8fafc"),
-      stroke: 1.1pt + color-title.lighten(65%),
+      fill: color-card-bg,
+      stroke: 1.1pt + color-card-stroke,
       radius: 9pt,
       inset: (x: 12pt, y: 10pt),
       height: 104pt,
@@ -24,21 +24,21 @@
         dir: ttb,
         spacing: 4pt,
         box(
-          fill: color-title.lighten(88%),
+          fill: color-primary.lighten(88%),
           radius: 3pt,
           inset: (x: 5pt, y: 2pt),
-          text(size: 7.5pt, weight: "bold", fill: color-title, font: font-heading)[UNIVERSO MOVIGO]
+          text(size: 7.5pt, weight: "bold", fill: color-primary, font: font-heading)[UNIVERSO MOVIGO]
         ),
         v(1pt),
-        block(text(size: 22pt, weight: "bold", fill: color-title, font: font-heading)[100,000]),
+        block(text(size: 22pt, weight: "bold", fill: color-primary, font: font-heading)[100,000]),
         block(text(size: 10pt, weight: "bold", fill: color-accent, font: font-body)[Viajes registrados]),
-        block(text(size: 8.5pt, fill: rgb("#64748b"), font: font-body)[298 cuadrantes urbanos])
+        block(text(size: 8.5pt, fill: color-muted, font: font-body)[298 cuadrantes urbanos])
       )
     ),
     // Métrica 2: Tasa de Cancelación Global
     block(
-      fill: rgb("#fff5f5"),
-      stroke: 1.1pt + color-red.lighten(65%),
+      fill: color-card-bg,
+      stroke: 1.1pt + color-coral.lighten(65%),
       radius: 9pt,
       inset: (x: 12pt, y: 10pt),
       height: 104pt,
@@ -46,15 +46,15 @@
         dir: ttb,
         spacing: 4pt,
         box(
-          fill: color-red.lighten(88%),
+          fill: color-coral.lighten(88%),
           radius: 3pt,
           inset: (x: 5pt, y: 2pt),
-          text(size: 7.5pt, weight: "bold", fill: color-red, font: font-heading)[FRICCIÓN CRÍTICA]
+          text(size: 7.5pt, weight: "bold", fill: color-coral, font: font-heading)[FRICCIÓN CRÍTICA]
         ),
         v(1pt),
-        block(text(size: 22pt, weight: "bold", fill: color-red, font: font-heading)[17.8%]),
-        block(text(size: 10pt, weight: "bold", fill: color-red, font: font-body)[Cancelación global]),
-        block(text(size: 8.5pt, fill: rgb("#64748b"), font: font-body)[Pico 38.4% bajo lluvia torrencial])
+        block(text(size: 22pt, weight: "bold", fill: color-coral, font: font-heading)[17.8%]),
+        block(text(size: 10pt, weight: "bold", fill: color-coral, font: font-body)[Cancelación global]),
+        block(text(size: 8.5pt, fill: color-muted, font: font-body)[Pico 38.4% bajo tormenta])
       )
     )
   ),
@@ -73,18 +73,18 @@
         gutter: 7pt,
         align: (center + horizon, left + horizon),
         box(
-          fill: color-red,
+          fill: color-coral,
           radius: 4pt,
           width: 22pt,
           height: 22pt,
           align(center + horizon, box(width: 14pt, slide-icons.alert-circle))
         ),
         [
-          #text(size: 12.8pt, weight: "bold", fill: color-title, font: font-heading)[Desafío Urbano en Managua] \
+          #text(size: 12.8pt, weight: "bold", fill: color-primary, font: font-heading)[Desafío Urbano en Managua] \
           #text(size: 8.5pt, fill: color-accent, font: font-body)[Tarificación dinámica bajo infraestructura vulnerable]
         ]
       ),
-      line(length: 100%, stroke: 0.5pt + rgb("#e2e8f0")),
+      line(length: 100%, stroke: 0.5pt + color-card-stroke),
       block[
         #set text(size: 9.8pt, fill: color-body, font: font-body)
         #set par(leading: 0.38em)
@@ -95,22 +95,22 @@
         columns: (auto, auto, auto),
         gutter: 6pt,
         box(
-          fill: rgb("#eff6ff"),
+          fill: color-accent.lighten(90%),
           radius: 3pt,
           inset: (x: 5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: color-accent, font: font-heading)[Red Vial 69k Nodos]
+          text(size: 7.8pt, weight: "bold", fill: color-primary, font: font-heading)[Red Vial 69k Nodos]
         ),
         box(
-          fill: rgb("#fef2f2"),
+          fill: color-coral.lighten(90%),
           radius: 3pt,
           inset: (x: 5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: color-red, font: font-heading)[Microclima Extremo]
+          text(size: 7.8pt, weight: "bold", fill: color-coral, font: font-heading)[Microclima Extremo]
         ),
         box(
-          fill: rgb("#f0fdfa"),
+          fill: color-slate-teal.lighten(90%),
           radius: 3pt,
           inset: (x: 5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: color-teal, font: font-heading)[Cauces Críticos]
+          text(size: 7.8pt, weight: "bold", fill: color-slate-teal, font: font-heading)[Cauces Críticos]
         )
       )
     )
@@ -132,7 +132,7 @@
     align(center + horizon, box(width: 14pt, slide-icons.help-circle))
   ),
   [
-    #text(size: 13.5pt, weight: "bold", fill: color-title, font: font-heading)[Tres Paradojas Operativas y Científicas a Contrastar]
+    #text(size: 13.5pt, weight: "bold", fill: color-primary, font: font-heading)[Tres Paradojas Operativas y Científicas a Contrastar]
   ]
 )
 
@@ -144,7 +144,7 @@
   // Paradoja 1: Tarifa
   block(
     fill: color-card-bg,
-    stroke: 1.1pt + color-title.lighten(65%),
+    stroke: 1.1pt + color-primary.lighten(65%),
     radius: 9pt,
     inset: (x: 12pt, y: 10pt),
     height: 148pt,
@@ -155,20 +155,20 @@
         columns: (auto, 1fr),
         align: (horizon + left, horizon + right),
         box(
-          fill: color-title,
+          fill: color-primary,
           radius: 3pt,
           inset: (x: 5.5pt, y: 2pt),
           text(size: 7.8pt, weight: "bold", fill: white, font: font-heading)[01 #sym.bar.v TARIFA]
         ),
         box(
-          fill: color-title.lighten(90%),
+          fill: color-primary.lighten(90%),
           radius: 3pt,
           inset: (x: 4.5pt, y: 1.8pt),
-          text(size: 7.2pt, weight: "bold", fill: color-title, font: font-heading)[Elasticidad Demanda]
+          text(size: 7.2pt, weight: "bold", fill: color-primary, font: font-heading)[Elasticidad Demanda]
         )
       ),
-      block(text(size: 14pt, weight: "bold", fill: color-title, font: font-heading)[¿Incentivo o Rechazo?]),
-      line(length: 100%, stroke: 0.5pt + color-title.lighten(70%)),
+      block(text(size: 14pt, weight: "bold", fill: color-primary, font: font-heading)[¿Incentivo o Rechazo?]),
+      line(length: 100%, stroke: 0.5pt + color-card-stroke),
       block[
         #set par(leading: 0.40em)
         #text(size: 10.8pt, fill: color-body, font: font-body)[
@@ -177,14 +177,14 @@
       ],
       v(2pt),
       block(
-        fill: rgb("#f8fafc"),
-        stroke: 0.6pt + rgb("#cbd5e1"),
+        fill: color-primary.lighten(96%),
+        stroke: 0.6pt + color-card-stroke,
         radius: 4pt,
         inset: (x: 7pt, y: 5pt),
         width: 100%,
         [
           #set par(leading: 0.36em)
-          #text(size: 9.2pt, fill: color-title, font: font-body)[
+          #text(size: 9.2pt, fill: color-primary, font: font-body)[
             *Hipótesis:* Existe un umbral no lineal donde el multiplicador cataliza cancelaciones por abandono.
           ]
         ]
@@ -218,7 +218,7 @@
         )
       ),
       block(text(size: 14pt, weight: "bold", fill: color-accent, font: font-heading)[¿Cobertura o Abandono?]),
-      line(length: 100%, stroke: 0.5pt + color-accent.lighten(70%)),
+      line(length: 100%, stroke: 0.5pt + color-card-stroke),
       block[
         #set par(leading: 0.40em)
         #text(size: 10.8pt, fill: color-body, font: font-body)[
@@ -227,8 +227,8 @@
       ],
       v(2pt),
       block(
-        fill: rgb("#eff6ff"),
-        stroke: 0.6pt + rgb("#bfdbfe"),
+        fill: color-accent.lighten(96%),
+        stroke: 0.6pt + color-card-stroke,
         radius: 4pt,
         inset: (x: 7pt, y: 5pt),
         width: 100%,
@@ -244,7 +244,7 @@
   // Paradoja 3: Ruteo
   block(
     fill: color-card-bg,
-    stroke: 1.1pt + color-teal.lighten(65%),
+    stroke: 1.1pt + color-slate-teal.lighten(65%),
     radius: 9pt,
     inset: (x: 12pt, y: 10pt),
     height: 148pt,
@@ -255,20 +255,20 @@
         columns: (auto, 1fr),
         align: (horizon + left, horizon + right),
         box(
-          fill: color-teal,
+          fill: color-slate-teal,
           radius: 3pt,
           inset: (x: 5.5pt, y: 2pt),
           text(size: 7.8pt, weight: "bold", fill: white, font: font-heading)[03 #sym.bar.v RUTEO]
         ),
         box(
-          fill: color-teal.lighten(90%),
+          fill: color-slate-teal.lighten(90%),
           radius: 3pt,
           inset: (x: 4.5pt, y: 1.8pt),
-          text(size: 7.2pt, weight: "bold", fill: color-teal, font: font-heading)[Red Dinámica]
+          text(size: 7.2pt, weight: "bold", fill: color-slate-teal, font: font-heading)[Red Dinámica]
         )
       ),
-      block(text(size: 14pt, weight: "bold", fill: color-teal, font: font-heading)[¿Distancia o Resiliencia?]),
-      line(length: 100%, stroke: 0.5pt + color-teal.lighten(70%)),
+      block(text(size: 14pt, weight: "bold", fill: color-slate-teal, font: font-heading)[¿Distancia o Resiliencia?]),
+      line(length: 100%, stroke: 0.5pt + color-card-stroke),
       block[
         #set par(leading: 0.40em)
         #text(size: 10.8pt, fill: color-body, font: font-body)[
@@ -277,14 +277,14 @@
       ],
       v(2pt),
       block(
-        fill: rgb("#f0fdfa"),
-        stroke: 0.6pt + rgb("#99f6e4"),
+        fill: color-slate-teal.lighten(96%),
+        stroke: 0.6pt + color-card-stroke,
         radius: 4pt,
         inset: (x: 7pt, y: 5pt),
         width: 100%,
         [
           #set par(leading: 0.36em)
-          #text(size: 9.2pt, fill: color-teal, font: font-body)[
+          #text(size: 9.2pt, fill: color-slate-teal, font: font-body)[
             *Hipótesis:* Un grafo de impedancia dinámica con Dijkstra reduce el tiempo efectivo bordeando zonas de riesgo.
           ]
         ]

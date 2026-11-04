@@ -1,14 +1,14 @@
 // Metadata and configuration shared across MoviGo documents and slides
 
-#let title = "Modelación del Impacto de la Tarifa Dinámica sobre la Tasa de Cancelación de Viajes en el Servicio MoviGo en Managua (2024)"
+#let title = "Diseño e Implementación de un Pipeline de Datos, Modelado Numérico y Algoritmos de Ruteo para la Optimización Operativa de MoviGo en Managua (2024)"
 
-#let title-short = "Tarifa Dinámica y Cancelación de Viajes en MoviGo Managua"
+#let title-short = "Pipeline de Datos, Modelado Numérico y Ruteo en MoviGo"
 
-#let title-presentation = "Tarifa Dinámica y Cancelación de Viajes en MoviGo"
+#let title-presentation = "Diseño e Implementación de un Pipeline de Datos, Modelado Numérico y Algoritmos de Ruteo para la Optimización Operativa de MoviGo en Managua (2024)"
 
-#let subtitle-presentation = "Modelación Cuantitativa y Mitigación Operativa en Managua (2024)"
+#let subtitle-presentation = none
 
-#let repo-url = "https://github.com/vect-maker/movigo-analytics"
+#let repo-url = "https://github.com/vect-maker/movigo-analytics.git"
 
 #let authors = (
   (

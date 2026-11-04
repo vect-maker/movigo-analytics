@@ -48,7 +48,7 @@
     icon: slide-icons.grid,
     title: [Modelo Kimball],
     subtitle: [Esquema Estrella y DuckDB],
-    accent: color-teal,
+    accent: color-slate-teal,
     body: [
       #list(
         [*Tabla de hechos:* `fct_trips` consolidando métricas de distancia, duración y multiplicador.],
