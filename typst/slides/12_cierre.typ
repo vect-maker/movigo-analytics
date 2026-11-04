@@ -5,4 +5,5 @@
   title: [¡Muchas gracias por su atención!],
   subtitle: [Espacio para Preguntas, Discusión y Recursos Abiertos de la Investigación],
   repo-url: repo-url,
+  simulation-repo-url: repo-simulation-url,
 )

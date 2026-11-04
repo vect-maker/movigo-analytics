@@ -251,11 +251,12 @@
   )
 })
 
-/// Diapositiva de cierre con tarjeta QR para el código fuente de la investigación
+/// Diapositiva de cierre con tarjetas QR para los repositorios de la investigación
 #let ending-slide(
   title: [¡Muchas gracias por su atención!],
   subtitle: [Espacio para Preguntas, Discusión y Recursos Abiertos de la Investigación],
   repo-url: "https://github.com/vect-maker/movigo-analytics.git",
+  simulation-repo-url: "https://github.com/vect-maker/data-simulation-set-1.git",
   config: (:),
 ) = touying-slide-wrapper(self => {
   let self = utils.merge-dicts(
@@ -269,37 +270,37 @@
     ),
   )
 
-  let qr-card(url, card-title, desc, tag, tag-color: color-accent) = {
+  let qr-card(url, card-title, desc, tag, tag-color: color-accent, card-width: 100%, qr-size: 76pt) = {
     box(
       fill: color-card-bg,
       stroke: 1.1pt + color-card-stroke,
       radius: 12pt,
-      inset: (x: 20pt, y: 16pt),
-      width: 500pt,
+      inset: (x: 16pt, y: 16pt),
+      width: card-width,
       grid(
-        columns: (94pt, 1fr),
-        gutter: 18pt,
+        columns: (qr-size + 14pt, 1fr),
+        gutter: 14pt,
         align: horizon,
         box(
           fill: white,
-          radius: 9pt,
+          radius: 8pt,
           stroke: 0.8pt + color-card-stroke,
-          inset: 7pt,
-          qrcode(url, width: 86pt)
+          inset: 6pt,
+          align(center + horizon, qrcode(url, width: qr-size))
         ),
         align(left)[
           #box(
             fill: tag-color.lighten(88%),
             radius: 3.5pt,
-            inset: (x: 8pt, y: 3pt),
-            text(size: 8.5pt, weight: "bold", fill: tag-color, font: font-heading, tag)
+            inset: (x: 7pt, y: 3pt),
+            text(size: 7.8pt, weight: "bold", fill: tag-color, font: font-heading, tag)
           )
-          #v(5pt)
-          #text(size: 14.5pt, weight: "bold", fill: color-primary, font: font-heading, card-title) \
-          #v(3pt)
-          #text(size: 9.8pt, fill: color-body, font: font-body, desc) \
           #v(4pt)
-          #text(size: 8.8pt, fill: color-accent, font: font-body)[#link(url)[#url]]
+          #text(size: 13pt, weight: "bold", fill: color-primary, font: font-heading, card-title) \
+          #v(2.5pt)
+          #text(size: 8.6pt, fill: color-body, font: font-body, desc) \
+          #v(4pt)
+          #text(size: 7.4pt, fill: color-accent, font: font-body)[#link(url)[#url]]
         ]
       )
     )
@@ -314,13 +315,13 @@
         top + left,
         rect(
           width: 960pt,
-          height: 180pt,
+          height: 175pt,
           fill: gradient.linear(color-primary, rgb("#1b5e54"), angle: 20deg),
         )
       )
       #place(
         top + left,
-        dy: 177pt,
+        dy: 172pt,
         rect(
           width: 960pt,
           height: 3pt,
@@ -331,7 +332,7 @@
       #place(
         top + left,
         dx: 60pt,
-        dy: 46pt,
+        dy: 42pt,
         block(
           width: 840pt,
           align(center,
@@ -348,19 +349,44 @@
 
       #place(
         top + left,
-        dx: 60pt,
-        dy: 240pt,
+        dx: 48pt,
+        dy: 220pt,
         block(
-          width: 840pt,
-          align(center,
-            qr-card(
-              repo-url,
-              [Código Fuente y Pipeline],
-              [Pipeline ELT en dbt Core, scripts de optimización en Python y compilación del artículo científico Typst.],
-              [CÓDIGO FUENTE],
-              tag-color: color-accent,
+          width: 864pt,
+          if simulation-repo-url != none [
+            #grid(
+              columns: (1fr, 1fr),
+              gutter: 18pt,
+              qr-card(
+                repo-url,
+                [Código Fuente y Pipeline],
+                [Pipeline ELT en dbt Core, scripts de optimización en Python y compilación del artículo científico Typst.],
+                [CÓDIGO FUENTE],
+                tag-color: color-accent,
+                qr-size: 76pt,
+              ),
+              qr-card(
+                simulation-repo-url,
+                [Datos de Simulación],
+                [Generador y conjunto de datos sintéticos con telemetría de viajes, perturbaciones climáticas y congestión.],
+                [DATOS DE SIMULACIÓN],
+                tag-color: rgb("#2563eb"),
+                qr-size: 76pt,
+              ),
             )
-          )
+          ] else [
+            #align(center,
+              qr-card(
+                repo-url,
+                [Código Fuente y Pipeline],
+                [Pipeline ELT en dbt Core, scripts de optimización en Python y compilación del artículo científico Typst.],
+                [CÓDIGO FUENTE],
+                tag-color: color-accent,
+                card-width: 500pt,
+                qr-size: 86pt,
+              )
+            )
+          ]
         )
       )
     ]

@@ -9,6 +9,8 @@
 #let subtitle-presentation = none
 
 #let repo-url = "https://github.com/vect-maker/movigo-analytics.git"
+#let repo-simulation-url = "https://github.com/vect-maker/data-simulation-set-1.git"
+#let simulation-repo-url = repo-simulation-url
 
 #let authors = (
   (
