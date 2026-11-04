@@ -8,7 +8,7 @@
 
 == Arquitectura de Datos ELT, Modelado Dimensional Kimball y Validación de Calidad
 
-Para analizar la movilidad urbana y la resiliencia operativa sobre volúmenes masivos de registros, la investigación adopta la ingeniería analítica contemporánea basada en el paradigma ELT (Extract, Load, Transform) @kimball2013. A diferencia del enfoque clásico ETL —donde los datos son transformados antes de su persistencia—, el flujo ELT desacopla la extracción y la carga de la fase de modelación analítica:
+Para analizar la movilidad urbana y la resiliencia operativa sobre volúmenes masivos de registros, la investigación adopta la ingeniería analítica contemporánea basada en el paradigma ELT (Extract, Load, Transform) @kimball2013. A diferencia del enfoque clásico ETL, donde los datos son transformados antes de su persistencia, el flujo ELT desacopla la extracción y la carga de la fase de modelación analítica:
 
 + *Raw Layer en Azure PostgreSQL:* Las colecciones transaccionales se recuperan mediante cursor-based pagination y se serializan en archivos columnares Apache Parquet. Dichos datos se cargan en Azure Database for PostgreSQL bajo el esquema transaccional `raw` en Tercera Forma Normal (3NF), garantizando inmutabilidad y aislamiento frente a la fuente de origen.
 + *Transformación Declarativa con dbt Core:* La ingeniería analítica se orquesta mediante dbt en dos capas: staging layer (vistas lógicas puras) y marts layer (tablas físicas bajo un Star Schema optimizado para OLAP).

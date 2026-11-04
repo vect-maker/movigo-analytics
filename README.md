@@ -1,4 +1,4 @@
-# Proyecto Integrador IV — MoviGo (Managua)
+# Proyecto Integrador IV: MoviGo (Managua)
 
 Este repositorio contiene la investigación de grado en Ingeniería en Ciencia de Datos: **Modelación del Impacto de la Tarifa Dinámica sobre la Tasa de Cancelación de Viajes en el Servicio MoviGo en Managua (2024)**, abordando sensibilidad econométrica, equilibrio de mercado, optimización vial ante eventos meteorológicos y reproducibilidad científica estricta (*Data-to-Document*).
 

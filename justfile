@@ -1,4 +1,4 @@
-# Justfile para el Proyecto Integrador IV — MoviGo
+# Justfile para el Proyecto Integrador IV: MoviGo
 # Automatización de tareas para Documentación & Diapositivas (Typst), Datos, API REST y Pipeline ELT.
 
 set dotenv-load

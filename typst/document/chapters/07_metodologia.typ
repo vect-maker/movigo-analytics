@@ -31,7 +31,7 @@ Para consolidar el repositorio analítico a partir de las fuentes desacopladas d
 
 #fig-dbt-lineage <fig-dbt-lineage>
 
-*Extracción e inmutabilidad columnar:* El consumo sistemático de los endpoints de la API REST se realiza mediante un cliente en Python (`fetcher.py`) con control dinámico de paginación (`limit=200`, `offset`). Los conjuntos recuperados se serializan en siete archivos columnares Apache Parquet (`pipeline/data/raw/*.parquet`: zonas, usuarios, conductores, campañas, clima, viajes y telemetría), garantizando inmutabilidad, compresión volumétrica y desacoplamiento de la red.
+*Extracción e inmutabilidad columnar:* El consumo sistemático de los endpoints de la API REST se realiza mediante un cliente en Python (`fetcher.py`) con control dinámico de paginación (`limit=200`, `offset`). Los conjuntos recuperados se serializan en archivos columnares Apache Parquet (`pipeline/data/raw/*.parquet`: `trips`, `trip_payments`, `trip_cancellations`, `urban_zones`, `quadrants`, `quadrant_weather`, `users`, `drivers`, `vehicles` e `incentive_campaigns`), garantizando inmutabilidad, compresión volumétrica y desacoplamiento de la red.
 
 *Ingestión en Raw Layer:* La carga inicial materializa el esquema relacional DDL estricto (`raw_schema.sql`, @lst-ddl) en el esquema `raw` de Azure Database for PostgreSQL. El cargador automatizado (`loader.py`, @lst-loader) aplica casteo de marcas temporales, establece conexión cifrada TLS/SSL y ejecuta inserciones por bloques de 2,000 registros respetando el orden topológico de restricciones relacionales.
 

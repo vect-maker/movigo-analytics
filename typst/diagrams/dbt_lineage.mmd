@@ -14,21 +14,21 @@ flowchart LR
     %% =========================================================================
     subgraph RAW ["<b>I. RAW LAYER (PostgreSQL)</b>"]
         direction TB
-        R_TRIP[("`**raw_viajes**
-        • transacciones operativas
-        • telemetría y tarifas`")]:::rawNode
+        R_TRIP[("`**raw.trips**
+        • raw.trip_payments
+        • raw.trip_cancellations`")]:::rawNode
 
-        R_GEO[("`**raw_zonas_urbanas**
-        • raw_cuadrantes
-        • topología espacial`")]:::rawNode
+        R_GEO[("`**raw.urban_zones**
+        • raw.quadrants
+        • spatial topology`")]:::rawNode
 
-        R_CLIMA[("`**raw_clima_cuadrantes**
-        • series meteorológicas
-        • precipitación horaria`")]:::rawNode
+        R_CLIMA[("`**raw.quadrant_weather**
+        • hourly meteorology
+        • runoff & congestion`")]:::rawNode
 
-        R_ACTORS[("`**raw_usuarios / conductores**
-        • telemetría vehicular
-        • incentivos y bonos`")]:::rawNode
+        R_ACTORS[("`**raw.users & drivers**
+        • raw.vehicles
+        • incentive_campaigns`")]:::rawNode
     end
 
     %% =========================================================================
