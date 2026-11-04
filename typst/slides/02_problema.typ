@@ -1,294 +1,170 @@
 #import "template.typ": *
 #import "components.typ": *
 
-= Problema y contexto de la investigación
+#slide(header: none)[
+  #speaker-marker("A", dx: 38pt, dy: -26pt)
 
-#speaker-marker("A")
-
-// --- SECCIÓN SUPERIOR: UNIVERSO DE MOVILIDAD Y VACÍO EMPÍRICO ---
-#grid(
-  columns: (380pt, 1fr),
-  gutter: 14pt,
-  // 1. Métricas del Universo de Operación
-  grid(
-    columns: (1fr, 1fr),
-    gutter: 10pt,
-    // Métrica 1: Viajes Totales
-    block(
-      fill: color-card-bg,
-      stroke: 1.1pt + color-card-stroke,
-      radius: 9pt,
-      inset: (x: 12pt, y: 10pt),
-      height: 104pt,
-      stack(
-        dir: ttb,
-        spacing: 4pt,
-        box(
-          fill: color-primary.lighten(88%),
-          radius: 3pt,
-          inset: (x: 5pt, y: 2pt),
-          text(size: 7.5pt, weight: "bold", fill: color-primary, font: font-heading)[UNIVERSO MOVIGO]
-        ),
-        v(1pt),
-        block(text(size: 22pt, weight: "bold", fill: color-primary, font: font-heading)[100,000]),
-        block(text(size: 10pt, weight: "bold", fill: color-accent, font: font-body)[Viajes registrados]),
-        block(text(size: 8.5pt, fill: color-muted, font: font-body)[298 cuadrantes urbanos])
-      )
-    ),
-    // Métrica 2: Tasa de Cancelación Global
-    block(
-      fill: color-card-bg,
-      stroke: 1.1pt + color-coral.lighten(65%),
-      radius: 9pt,
-      inset: (x: 12pt, y: 10pt),
-      height: 104pt,
-      stack(
-        dir: ttb,
-        spacing: 4pt,
-        box(
-          fill: color-coral.lighten(88%),
-          radius: 3pt,
-          inset: (x: 5pt, y: 2pt),
-          text(size: 7.5pt, weight: "bold", fill: color-coral, font: font-heading)[FRICCIÓN CRÍTICA]
-        ),
-        v(1pt),
-        block(text(size: 22pt, weight: "bold", fill: color-coral, font: font-heading)[17.8%]),
-        block(text(size: 10pt, weight: "bold", fill: color-coral, font: font-body)[Cancelación global]),
-        block(text(size: 8.5pt, fill: color-muted, font: font-body)[Pico 38.4% bajo tormenta])
-      )
+  // Franja decorativa en el margen izquierdo: vector continuo en gradiente
+  #place(
+    top + left,
+    dx: -60pt,
+    dy: -48pt,
+    rect(
+      width: 10pt,
+      height: 540pt,
+      fill: gradient.linear(color-primary, color-mint),
     )
-  ),
-  // 2. Tarjeta de Vacío en la Literatura / Contexto Managua
-  block(
-    fill: color-card-bg,
-    stroke: 1.1pt + color-card-stroke,
-    radius: 9pt,
-    inset: (x: 14pt, y: 10pt),
-    height: 104pt,
-    stack(
-      dir: ttb,
-      spacing: 5pt,
+  )
+
+  // Decoración geométrica en esquina inferior derecha inspirada en la plantilla de referencia
+  #place(
+    bottom + right,
+    dx: 60pt,
+    dy: 36pt,
+    polygon(
+      fill: color-mint.lighten(80%),
+      (0pt, 0pt),
+      (-145pt, 0pt),
+      (0pt, -145pt),
+    )
+  )
+
+  // Título vertical rotado en el margen izquierdo: "PROBLEMÁTICA" (desplazado a la derecha para mayor separación de la barra)
+  #place(
+    top + left,
+    dx: -4pt,
+    dy: 360pt,
+    rotate(-90deg, origin: bottom + left)[
+      #text(size: 42pt, weight: "bold", font: font-heading)[
+        #text(fill: color-primary)[PROBLEMÁ]#text(fill: color-mint)[TICA]
+      ]
+    ]
+  )
+
+  // Cuadrícula 2x2 de las 4 Dimensiones de la Problemática (ocupando el espacio máximo del slide)
+  #place(
+    top + left,
+    dx: 86pt,
+    dy: -24pt,
+    block(
+      width: 754pt,
       grid(
-        columns: (22pt, 1fr),
-        gutter: 7pt,
-        align: (center + horizon, left + horizon),
-        box(
-          fill: color-coral,
-          radius: 4pt,
-          width: 22pt,
-          height: 22pt,
-          align(center + horizon, box(width: 14pt, slide-icons.alert-circle))
+        columns: (1fr, 1fr),
+        row-gutter: 14pt,
+        column-gutter: 22pt,
+
+        // 1. Dilema Tarifario (Top Left)
+        stack(
+          spacing: 6pt,
+          text(size: 19pt, weight: "bold", fill: color-primary, font: font-heading)[Dilema Tarifario],
+          box(
+            width: 100%,
+            height: 196pt,
+            radius: 9pt,
+            stroke: 1.8pt + color-accent,
+            fill: white,
+            inset: (x: 18pt, y: 16pt),
+            [
+              #set par(leading: 0.58em, justify: true)
+              #text(size: 12.8pt, fill: color-body, font: font-body)[
+                La tarificación dinámica (_surge pricing_) opera como un mecanismo financiero ciego ante las restricciones espaciales de la red vial. Los incrementos tarifarios agresivos saturan la elasticidad-precio del usuario sin descongestionar vías ni resolver atascos, detonando cancelaciones masivas por abandono del servicio.
+              ]
+              #v(1fr)
+              #box(
+                fill: color-card-bg,
+                stroke: 0.7pt + color-card-stroke,
+                radius: 4pt,
+                inset: (x: 9pt, y: 4.5pt),
+                text(size: 9.5pt, weight: "bold", fill: color-coral)[Fricción: Cancelación de usuarios por sobrecosto]
+              )
+            ]
+          )
         ),
-        [
-          #text(size: 12.8pt, weight: "bold", fill: color-primary, font: font-heading)[Desafío Urbano en Managua] \
-          #text(size: 8.5pt, fill: color-accent, font: font-body)[Tarificación dinámica bajo infraestructura vulnerable]
-        ]
-      ),
-      line(length: 100%, stroke: 0.5pt + color-card-stroke),
-      block[
-        #set text(size: 9.8pt, fill: color-body, font: font-body)
-        #set par(leading: 0.38em)
-        Los algoritmos convencionales de tarificación asumen redes fluidas y homogéneas; en Managua, la escorrentía pluvial y los cauces abiertos colapsan la conectividad y disparan cancelaciones.
-      ],
-      v(2pt),
-      grid(
-        columns: (auto, auto, auto),
-        gutter: 6pt,
-        box(
-          fill: color-accent.lighten(90%),
-          radius: 3pt,
-          inset: (x: 5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: color-primary, font: font-heading)[Red Vial 69k Nodos]
+
+        // 2. Fricción Territorial (Top Right)
+        stack(
+          spacing: 6pt,
+          text(size: 19pt, weight: "bold", fill: color-primary, font: font-heading)[Fricción Territorial],
+          box(
+            width: 100%,
+            height: 196pt,
+            radius: 9pt,
+            stroke: 1.8pt + color-accent,
+            fill: white,
+            inset: (x: 18pt, y: 16pt),
+            [
+              #set par(leading: 0.58em, justify: true)
+              #text(size: 12.8pt, fill: color-body, font: font-body)[
+                Managua exhibe una estructura urbana fragmentada y marcadamente dispersa. Mientras los cuadrantes corporativos y residenciales altos absorben aumentos de tarifa, los sectores populares y comerciales dependen del efectivo, sufriendo exclusión territorial y rechazos de viaje por los conductores.
+              ]
+              #v(1fr)
+              #box(
+                fill: color-card-bg,
+                stroke: 0.7pt + color-card-stroke,
+                radius: 4pt,
+                inset: (x: 9pt, y: 4.5pt),
+                text(size: 9.5pt, weight: "bold", fill: color-primary)[Brecha: Exclusión territorial en cuadrantes populares]
+              )
+            ]
+          )
         ),
-        box(
-          fill: color-coral.lighten(90%),
-          radius: 3pt,
-          inset: (x: 5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: color-coral, font: font-heading)[Microclima Extremo]
+
+        // 3. Choque Climático (Bottom Left)
+        stack(
+          spacing: 6pt,
+          text(size: 19pt, weight: "bold", fill: color-primary, font: font-heading)[Choque Climático],
+          box(
+            width: 100%,
+            height: 196pt,
+            radius: 9pt,
+            stroke: 1.8pt + color-accent,
+            fill: white,
+            inset: (x: 18pt, y: 16pt),
+            [
+              #set par(leading: 0.58em, justify: true)
+              #text(size: 12.8pt, fill: color-body, font: font-body)[
+                Los episodios de precipitaciones intensas y tormentas tropicales colapsan la vulnerable infraestructura de drenaje pluvial de la capital, inundando cauces y nudos arteriales neurálgicos. El anegamiento paraliza el tránsito, atrapa unidades vehiculares y desborda una demanda de refugio imposible de atender.
+              ]
+              #v(1fr)
+              #box(
+                fill: color-card-bg,
+                stroke: 0.7pt + color-card-stroke,
+                radius: 4pt,
+                inset: (x: 9pt, y: 4.5pt),
+                text(size: 9.5pt, weight: "bold", fill: color-coral)[Vulnerabilidad: Anegamiento pluvial y parálisis de nudos viales]
+              )
+            ]
+          )
         ),
-        box(
-          fill: color-slate-teal.lighten(90%),
-          radius: 3pt,
-          inset: (x: 5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: color-slate-teal, font: font-heading)[Cauces Críticos]
-        )
+
+        // 4. Rigidez Vial y Ruteo (Bottom Right)
+        stack(
+          spacing: 6pt,
+          text(size: 19pt, weight: "bold", fill: color-primary, font: font-heading)[Rigidez Vial y Ruteo],
+          box(
+            width: 100%,
+            height: 196pt,
+            radius: 9pt,
+            stroke: 1.8pt + color-accent,
+            fill: white,
+            inset: (x: 18pt, y: 16pt),
+            [
+              #set par(leading: 0.58em, justify: true)
+              #text(size: 12.8pt, fill: color-body, font: font-body)[
+                El despacho tradicional de viajes no anticipa los cuellos de botella viales ni ofrece navegación inteligente en tiempo real. Los conductores quedan atrapados en corredores colapsados ante la ausencia de algoritmos prescriptivos de camino mínimo capaces de circunnavegar las zonas críticas.
+              ]
+              #v(1fr)
+              #box(
+                fill: color-card-bg,
+                stroke: 0.7pt + color-card-stroke,
+                radius: 4pt,
+                inset: (x: 9pt, y: 4.5pt),
+                text(size: 9.5pt, weight: "bold", fill: color-accent)[Solución: Ruteo prescriptivo de camino mínimo]
+              )
+            ]
+          )
+        ),
       )
     )
   )
-)
-
-#v(10pt)
-
-// --- SECCIÓN INFERIOR: TRES PARADOJAS CIENTÍFICAS A CONTRASTAR ---
-#grid(
-  columns: (22pt, 1fr),
-  gutter: 7pt,
-  align: (center + horizon, left + horizon),
-  box(
-    fill: color-accent,
-    radius: 4pt,
-    width: 22pt,
-    height: 22pt,
-    align(center + horizon, box(width: 14pt, slide-icons.help-circle))
-  ),
-  [
-    #text(size: 13.5pt, weight: "bold", fill: color-primary, font: font-heading)[Tres Paradojas Operativas y Científicas a Contrastar]
-  ]
-)
-
-#v(6pt)
-
-#grid(
-  columns: (1fr, 1fr, 1fr),
-  gutter: 12pt,
-  // Paradoja 1: Tarifa
-  block(
-    fill: color-card-bg,
-    stroke: 1.1pt + color-primary.lighten(65%),
-    radius: 9pt,
-    inset: (x: 12pt, y: 10pt),
-    height: 148pt,
-    stack(
-      dir: ttb,
-      spacing: 5pt,
-      grid(
-        columns: (auto, 1fr),
-        align: (horizon + left, horizon + right),
-        box(
-          fill: color-primary,
-          radius: 3pt,
-          inset: (x: 5.5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: white, font: font-heading)[01 #sym.bar.v TARIFA]
-        ),
-        box(
-          fill: color-primary.lighten(90%),
-          radius: 3pt,
-          inset: (x: 4.5pt, y: 1.8pt),
-          text(size: 7.2pt, weight: "bold", fill: color-primary, font: font-heading)[Elasticidad Demanda]
-        )
-      ),
-      block(text(size: 14pt, weight: "bold", fill: color-primary, font: font-heading)[¿Incentivo o Rechazo?]),
-      line(length: 100%, stroke: 0.5pt + color-card-stroke),
-      block[
-        #set par(leading: 0.40em)
-        #text(size: 10.8pt, fill: color-body, font: font-body)[
-          ¿Atrae el multiplicador mayor oferta de conductores o ahuyenta al usuario superando su disposición a pagar?
-        ]
-      ],
-      v(2pt),
-      block(
-        fill: color-primary.lighten(96%),
-        stroke: 0.6pt + color-card-stroke,
-        radius: 4pt,
-        inset: (x: 7pt, y: 5pt),
-        width: 100%,
-        [
-          #set par(leading: 0.36em)
-          #text(size: 9.2pt, fill: color-primary, font: font-body)[
-            *Hipótesis:* Existe un umbral no lineal donde el multiplicador cataliza cancelaciones por abandono.
-          ]
-        ]
-      )
-    )
-  ),
-  // Paradoja 2: Espacio
-  block(
-    fill: color-card-bg,
-    stroke: 1.1pt + color-accent.lighten(65%),
-    radius: 9pt,
-    inset: (x: 12pt, y: 10pt),
-    height: 148pt,
-    stack(
-      dir: ttb,
-      spacing: 5pt,
-      grid(
-        columns: (auto, 1fr),
-        align: (horizon + left, horizon + right),
-        box(
-          fill: color-accent,
-          radius: 3pt,
-          inset: (x: 5.5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: white, font: font-heading)[02 #sym.bar.v ESPACIO]
-        ),
-        box(
-          fill: color-accent.lighten(90%),
-          radius: 3pt,
-          inset: (x: 4.5pt, y: 1.8pt),
-          text(size: 7.2pt, weight: "bold", fill: color-accent, font: font-heading)[Disparidad Territorial]
-        )
-      ),
-      block(text(size: 14pt, weight: "bold", fill: color-accent, font: font-heading)[¿Cobertura o Abandono?]),
-      line(length: 100%, stroke: 0.5pt + color-card-stroke),
-      block[
-        #set par(leading: 0.40em)
-        #text(size: 10.8pt, fill: color-body, font: font-body)[
-          ¿Se distribuye la flota equitativamente o se concentra en distritos comerciales dejando periferias desabastecidas?
-        ]
-      ],
-      v(2pt),
-      block(
-        fill: color-accent.lighten(96%),
-        stroke: 0.6pt + color-card-stroke,
-        radius: 4pt,
-        inset: (x: 7pt, y: 5pt),
-        width: 100%,
-        [
-          #set par(leading: 0.36em)
-          #text(size: 9.2pt, fill: color-accent, font: font-body)[
-            *Hipótesis:* La periferia sur y oriental acumula cancelaciones crónicas por tiempos de espera inviables.
-          ]
-        ]
-      )
-    )
-  ),
-  // Paradoja 3: Ruteo
-  block(
-    fill: color-card-bg,
-    stroke: 1.1pt + color-slate-teal.lighten(65%),
-    radius: 9pt,
-    inset: (x: 12pt, y: 10pt),
-    height: 148pt,
-    stack(
-      dir: ttb,
-      spacing: 5pt,
-      grid(
-        columns: (auto, 1fr),
-        align: (horizon + left, horizon + right),
-        box(
-          fill: color-slate-teal,
-          radius: 3pt,
-          inset: (x: 5.5pt, y: 2pt),
-          text(size: 7.8pt, weight: "bold", fill: white, font: font-heading)[03 #sym.bar.v RUTEO]
-        ),
-        box(
-          fill: color-slate-teal.lighten(90%),
-          radius: 3pt,
-          inset: (x: 4.5pt, y: 1.8pt),
-          text(size: 7.2pt, weight: "bold", fill: color-slate-teal, font: font-heading)[Red Dinámica]
-        )
-      ),
-      block(text(size: 14pt, weight: "bold", fill: color-slate-teal, font: font-heading)[¿Distancia o Resiliencia?]),
-      line(length: 100%, stroke: 0.5pt + color-card-stroke),
-      block[
-        #set par(leading: 0.40em)
-        #text(size: 10.8pt, fill: color-body, font: font-body)[
-          ¿Optimiza la ruta euclidiana tradicional o colapsa el viaje al enviar al conductor a través de un cauce anegado?
-        ]
-      ],
-      v(2pt),
-      block(
-        fill: color-slate-teal.lighten(96%),
-        stroke: 0.6pt + color-card-stroke,
-        radius: 4pt,
-        inset: (x: 7pt, y: 5pt),
-        width: 100%,
-        [
-          #set par(leading: 0.36em)
-          #text(size: 9.2pt, fill: color-slate-teal, font: font-body)[
-            *Hipótesis:* Un grafo de impedancia dinámica con Dijkstra reduce el tiempo efectivo bordeando zonas de riesgo.
-          ]
-        ]
-      )
-    )
-  )
-)
+]

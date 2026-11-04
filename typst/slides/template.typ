@@ -103,16 +103,16 @@
   )
 })
 
-/// Diapositiva de portada institucional moderna en diseño vectorial puro
+/// Diapositiva de portada institucional ejecutiva de alta precisión (inspirada en diseño Stitch)
 #let title-slide(
   title: [Título de la Investigación],
   subtitle: none,
   authors: (),
   tutor: none,
-  career: none,
-  university: none,
+  career: "Ingeniería en Ciencias de Datos",
+  university: "UNAN-Managua",
   logo: "../assets/unan-logo.jpg",
-  date: none,
+  date: "Segundo Semestre • 2026",
   config: (:),
 ) = touying-slide-wrapper(self => {
   let self = utils.merge-dicts(
@@ -158,134 +158,90 @@
     tutor
   }
 
+  let author-card(num, name) = {
+    box(
+      fill: color-card-bg,
+      stroke: 0.6pt + color-card-stroke,
+      radius: 4pt,
+      inset: (x: 14pt, y: 10pt),
+      width: 100%,
+      grid(
+        columns: (22pt, 1fr),
+        gutter: 10pt,
+        align: horizon,
+        box(
+          fill: color-primary,
+          radius: 3pt,
+          width: 22pt,
+          height: 22pt,
+          align(center + horizon, text(fill: white, size: 8.5pt, weight: "bold", font: font-heading, num))
+        ),
+        text(size: 11pt, weight: "bold", fill: color-primary, font: font-heading, name)
+      )
+    )
+  }
+
   touying-slide(
     self: self,
     config: config,
     {
-      // Panel lateral decorativo con gradiente en Teal Profundo
+      // 1. Columna lateral decorativa de acento fino en margen izquierdo
       place(
         top + left,
         rect(
-          width: 220pt,
+          width: 8pt,
           height: 540pt,
-          fill: gradient.linear(color-primary, rgb("#0d332e"), angle: 45deg),
+          fill: gradient.linear(color-primary, color-mint),
         )
       )
 
-      // Acento geométrico en panel lateral
+      // 2. Lienzo principal estructurado
       place(
         top + left,
-        dx: 216pt,
-        rect(
-          width: 4pt,
-          height: 540pt,
-          fill: gradient.linear(color-accent, color-coral),
-        )
-      )
-
-      // Identificador institucional en panel lateral
-      place(
-        top + left,
-        dx: 28pt,
-        dy: 36pt,
+        dx: 48pt,
+        dy: 46pt,
         block(
-          width: 165pt,
-          stack(
-            spacing: 11pt,
-            if logo != none [
-              #box(
-                fill: white,
-                radius: 4pt,
-                inset: (x: 8pt, y: 6pt),
-                align(center + horizon, image(logo, width: 145pt))
-              )
-            ],
-            box(
-              fill: color-accent,
-              radius: 4pt,
-              inset: (x: 8pt, y: 4pt),
-              text(fill: white, size: 8.5pt, weight: "bold", font: font-heading)[PROYECTO INTEGRADOR IV]
-            ),
-            text(fill: white, size: 15pt, weight: "bold", font: font-heading)[MoviGo Analytics],
-            line(length: 100%, stroke: 0.8pt + rgb("#216157")),
-            if career != none [
-              #text(fill: rgb("#d1fae5"), size: 9pt, font: font-body, career) \
-            ],
-            if university != none and logo == none [
-              #v(4pt)
-              #text(fill: rgb("#a7f3d0"), size: 8.5pt, font: font-body, university)
-            ],
-            if date != none [
-              #v(10pt)
-              #text(fill: rgb("#d1fae5"), size: 8.5pt, weight: "semibold", font: font-body, date)
-            ]
-          )
-        )
-      )
-
-      // Contenido principal de la portada (lado derecho)
-      place(
-        top + left,
-        dx: 260pt,
-        dy: 52pt,
-        block(
-          width: 640pt,
+          width: 864pt,
           stack(
             spacing: 0pt,
-            box(
-              fill: color-card-bg,
-              stroke: 0.8pt + color-card-stroke,
-              radius: 4pt,
-              inset: (x: 8pt, y: 3.5pt),
-              text(fill: color-accent, size: 8.5pt, weight: "bold", font: font-heading)[ARTÍCULO CIENTÍFICO Y MODELACIÓN]
-            ),
-            v(10pt),
+
+            // CABECERA INSTITUCIONAL: ÚNICAMENTE EL LOGOTIPO OFICIAL (SIN BORDES NI SOMBRAS)
+            if logo != none [
+              #image(logo, height: 56pt)
+            ],
+
+            v(34pt),
+
+            // SECCIÓN CENTRAL: TÍTULO COMPLETO A ANCHO TOTAL
             text(
-              fill: color-primary,
-              size: 22.5pt,
+              size: 27pt,
               weight: "bold",
+              fill: color-primary,
               font: font-heading,
               title,
             ),
-            if subtitle != none and subtitle != [] [
-              #v(8pt)
-              #text(
-                fill: color-accent,
-                size: 13.5pt,
-                weight: "medium",
-                font: font-body,
-                subtitle,
-              )
-            ],
-            v(18pt),
+
+            v(44pt),
             line(length: 100%, stroke: 0.6pt + color-card-stroke),
-            v(16pt),
-            grid(
-              columns: (1fr, 1fr),
-              gutter: 20pt,
-              // Autores
-              stack(
-                spacing: 6pt,
-                text(fill: color-primary, size: 11pt, weight: "bold", font: font-heading)[Autores de la Investigación:],
-                grid(
-                  columns: 1,
-                  row-gutter: 4.5pt,
-                  ..author-items.map(a => text(fill: color-body, size: 10pt, font: font-body, a))
-                )
-              ),
-              // Tutor y detalles académicos
-              stack(
-                spacing: 6pt,
-                if tutor-name != none [
-                  #text(fill: color-primary, size: 11pt, weight: "bold", font: font-heading)[Tutor Académico:]
-                  #v(2pt)
-                  #text(fill: color-body, size: 10.5pt, font: font-body, tutor-name)
+            v(26pt),
+
+            // SECCIÓN INFERIOR: METADATOS ACADÉMICOS (AUTORES DE LA INVESTIGACIÓN)
+            stack(
+              spacing: 10pt,
+              grid(
+                columns: (1fr, auto),
+                text(size: 8.8pt, weight: "bold", fill: color-primary, font: font-heading)[
+                  AUTORES DE LA INVESTIGACIÓN
                 ],
-                v(8pt),
-                text(fill: color-muted, size: 8.8pt, font: font-body)[
-                  Segundo Semestre • 2026 \
-                  Managua, Nicaragua
-                ]
+                text(size: 8.2pt, fill: color-muted, font: font-body)[Ingeniería en Ciencias de Datos]
+              ),
+              grid(
+                columns: (1fr, 1fr),
+                gutter: 10pt,
+                ..author-items.slice(0, calc.min(4, author-items.len())).enumerate().map(((idx, item)) => {
+                  let num = "0" + str(idx + 1)
+                  author-card(num, item)
+                })
               )
             )
           )
