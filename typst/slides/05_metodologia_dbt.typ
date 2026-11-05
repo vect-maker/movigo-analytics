@@ -9,7 +9,6 @@
 #speaker-marker("B")
 
 #v(2pt)
-
 #grid(
   columns: (1.35fr, 1fr),
   gutter: 14pt,
