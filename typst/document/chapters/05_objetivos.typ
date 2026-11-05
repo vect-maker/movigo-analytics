@@ -2,7 +2,7 @@
 
 == Objetivo General
 
-*Diseñar e implementar* un pipeline de datos, modelos numéricos y algoritmos de ruteo para la optimización operativa de la red MoviGo en el municipio de Managua durante el año 2024.
+*Diseñar* un pipeline de datos, modelos numéricos y algoritmos de ruteo para la optimización operativa de la red MoviGo en el municipio de Managua durante el año 2024.
 
 == Objetivos Específicos
 

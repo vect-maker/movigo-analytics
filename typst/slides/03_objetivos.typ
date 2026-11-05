@@ -33,7 +33,7 @@
         #block(width: 420pt)[
           #set par(leading: 0.44em, justify: false)
           #text(size: 13.5pt, weight: "bold", fill: color-accent, font: font-heading)[
-            Diseñar e implementar un pipeline de datos, modelos numéricos y algoritmos de ruteo para la optimización operativa de la red MoviGo en el municipio de Managua durante el año 2024.
+            Diseñar un pipeline de datos, modelos numéricos y algoritmos de ruteo para la optimización operativa de la red MoviGo en el municipio de Managua durante el año 2024.
           ]
         ]
       ]
