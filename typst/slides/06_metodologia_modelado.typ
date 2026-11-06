@@ -47,8 +47,8 @@
         line(length: 100%, stroke: 0.6pt + color-card-stroke),
         v(2pt),
         [
-          #set text(size: 9.1pt, font: ("Liberation Mono", "DejaVu Sans Mono"))
-          #set par(leading: 0.38em)
+          #set text(size: 11pt, font: ("Liberation Mono", "DejaVu Sans Mono"))
+          #set par(leading: 0.44em)
           ```python
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -57,26 +57,21 @@ from sklearn.pipeline import Pipeline
 
 # 1. Aislamiento analitico 80/20 determinista
 X_tr, X_te, y_tr, y_te = train_test_split(
-    df[["distance_km"]], df["target"], # duration o fare
-    test_size=0.20,
-    random_state=42
+    df[["distance_km"]], df["target"],
+    test_size=0.20, random_state=42
 )
 
-# 2. Pipeline con estandarizacion y SGDRegressor
+# 2. Pipeline con estandarizacion y SGD
 pipeline = Pipeline([
     ("scaler", StandardScaler()),
     ("sgd", SGDRegressor(
-        loss="squared_error",
-        penalty=None,
-        max_iter=2000,
-        tol=1e-4,
-        eta0=0.01,
-        learning_rate="invscaling",
-        random_state=42
+        loss="squared_error", penalty=None,
+        max_iter=2000, tol=1e-4, eta0=0.01,
+        learning_rate="invscaling", random_state=42
     ))
 ])
 
-# 3. Ajuste iterativo y prediccion fuera de muestra
+# 3. Ajuste iterativo y prediccion
 pipeline.fit(X_tr, y_tr)
 y_pred = pipeline.predict(X_te)
           ```

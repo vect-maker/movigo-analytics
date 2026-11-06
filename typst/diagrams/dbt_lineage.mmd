@@ -3,81 +3,91 @@ flowchart LR
     %% =========================================================================
     %% ESTILOS VISUALES Y PALETA DE COLORES MAESTRA
     %% =========================================================================
-    classDef default fill:#F8FAFC,stroke:#334155,stroke-width:1.8px,color:#0F172A,font-size:16px;
-    classDef rawNode fill:#EFF6FF,stroke:#2563EB,stroke-width:2.2px,color:#1E3A8A,font-size:15.5px;
-    classDef stgNode fill:#FEF3C7,stroke:#D97706,stroke-width:2.2px,color:#78350F,font-size:15.5px;
-    classDef fctNode fill:#ECFDF5,stroke:#059669,stroke-width:2.8px,color:#064E3B,font-size:16.5px;
-    classDef dimNode fill:#F1F5F9,stroke:#334155,stroke-width:2.2px,color:#0F172A,font-size:15.5px;
+    classDef default fill:#F8FAFC,stroke:#334155,stroke-width:2px,color:#0F172A,font-size:16px;
+    classDef rawNode fill:#EFF6FF,stroke:#2563EB,stroke-width:2.2px,color:#1E3A8A,font-size:15px,font-weight:bold;
+    classDef stgNode fill:#FEF3C7,stroke:#D97706,stroke-width:2.2px,color:#78350F,font-size:15px,font-weight:bold;
+    classDef fctNode fill:#ECFDF5,stroke:#059669,stroke-width:3px,color:#064E3B,font-size:17px,font-weight:bold;
+    classDef dimNode fill:#F1F5F9,stroke:#475569,stroke-width:2.2px,color:#0F172A,font-size:15px,font-weight:bold;
 
     %% =========================================================================
     %% CAPA 1: RAW LAYER (POSTGRESQL - ESQUEMA 3NF)
     %% =========================================================================
-    subgraph RAW ["<b style='font-size:17px;'>I. RAW LAYER (PostgreSQL)</b>"]
+    subgraph RAW ["<b style='font-size:17px;'>I. RAW LAYER (PostgreSQL 3NF)</b>"]
         direction TB
-        R_GEO[("`**raw.urban_zones**
-        24 zonas y 298 cuadrantes WGS84`")]:::rawNode
-
-        R_CLIMA[("`**raw.quadrant_weather**
-        Meteorología horaria y escorrentía`")]:::rawNode
-
-        R_ACTORS[("`**raw.users & drivers**
-        Conductores, usuarios y flota`")]:::rawNode
-
-        R_TRIP[("`**raw.trips**
-        100k registros transaccionales`")]:::rawNode
+        R_ZONES[("raw.urban_zones")]:::rawNode
+        R_QUADS[("raw.quadrants")]:::rawNode
+        R_CLIMA[("raw.quadrant_weather")]:::rawNode
+        R_USERS[("raw.users")]:::rawNode
+        R_DRIVERS[("raw.drivers")]:::rawNode
+        R_VEHICLES[("raw.vehicles")]:::rawNode
+        R_TRIPS[("raw.trips")]:::rawNode
+        R_PAYMENTS[("raw.trip_payments")]:::rawNode
+        R_CANCELS[("raw.trip_cancellations")]:::rawNode
     end
 
     %% =========================================================================
     %% CAPA 2: STAGING LAYER (DBT CORE - VISTAS 1:1)
     %% =========================================================================
-    subgraph STG ["<b style='font-size:17px;'>II. STAGING LAYER (dbt Views)</b>"]
+    subgraph STG ["<b style='font-size:17px;'>II. STAGING LAYER (dbt Views 1:1)</b>"]
         direction TB
-        S_GEO["`**stg_urban_zones**
-        Normalización espacial y cauces`"]:::stgNode
-
-        S_CLIMA["`**stg_weather**
-        Microclima horario por cuadrante`"]:::stgNode
-
-        S_ACTORS["`**stg_users & drivers**
-        Estratificación y perfil activo`"]:::stgNode
-
-        S_TRIP["`**stg_trips & payments**
-        Tipado, desglose surge e is_cancelled`"]:::stgNode
+        S_ZONES["stg_urban_zones"]:::stgNode
+        S_QUADS["stg_quadrants"]:::stgNode
+        S_CLIMA["stg_weather"]:::stgNode
+        S_USERS["stg_users"]:::stgNode
+        S_DRIVERS["stg_drivers"]:::stgNode
+        S_VEHICLES["stg_vehicles"]:::stgNode
+        S_TRIPS["stg_trips"]:::stgNode
+        S_PAYMENTS["stg_trip_payments"]:::stgNode
+        S_CANCELS["stg_trip_cancellations"]:::stgNode
     end
 
     %% =========================================================================
     %% CAPA 3: MARTS LAYER (KIMBALL STAR SCHEMA - TABLAS)
     %% =========================================================================
-    subgraph MARTS ["<b style='font-size:17px;'>III. MARTS (Star Schema)</b>"]
+    subgraph MARTS ["<b style='font-size:17px;'>III. MARTS (Star Schema Kimball)</b>"]
         direction TB
-        D_ZONES["`**dim_zones & quadrants**
-        Role-playing: origen / destino`"]:::dimNode
-
-        D_CLIMA["`**dim_weather**
-        Régimen hídrico y severidad pluvial`"]:::dimNode
-
-        D_ACTORS["`**dim_users & drivers**
-        Segmentación de demanda y flota`"]:::dimNode
-
-        F_TRIP["`**fct_trips (Fact Table)**
-        • 77,487 viajes (grain atómico)
-        • Surrogate keys conformadas (MD5)
-        • Métricas operacionales y surge`"]:::fctNode
+        D_ZONES["dim_zones"]:::dimNode
+        D_QUADS["dim_quadrants"]:::dimNode
+        D_CLIMA["dim_weather"]:::dimNode
+        D_USERS["dim_users"]:::dimNode
+        D_DRIVERS["dim_drivers"]:::dimNode
+        F_TRIPS["fct_trips"]:::fctNode
     end
 
     %% =========================================================================
-    %% CONEXIONES DIRECTAS Y LIMPIAS ENTRE CAPAS
+    %% LINAJE 1:1 DIRECTO: RAW -> STAGING
     %% =========================================================================
-    R_GEO --> S_GEO
+    R_ZONES --> S_ZONES
+    R_QUADS --> S_QUADS
     R_CLIMA --> S_CLIMA
-    R_ACTORS --> S_ACTORS
-    R_TRIP --> S_TRIP
+    R_USERS --> S_USERS
+    R_DRIVERS --> S_DRIVERS
+    R_VEHICLES --> S_VEHICLES
+    R_TRIPS --> S_TRIPS
+    R_PAYMENTS --> S_PAYMENTS
+    R_CANCELS --> S_CANCELS
 
-    S_GEO --> D_ZONES
+    %% =========================================================================
+    %% LINAJE STAGING -> MARTS DIMENSIONES
+    %% =========================================================================
+    S_ZONES --> D_ZONES
+    S_QUADS --> D_QUADS
     S_CLIMA --> D_CLIMA
-    S_ACTORS --> D_ACTORS
-    S_TRIP ==> F_TRIP
+    S_USERS --> D_USERS
+    S_DRIVERS --> D_DRIVERS
+    S_VEHICLES --> D_DRIVERS
 
-    D_ZONES -.-> F_TRIP
-    D_CLIMA -.-> F_TRIP
-    D_ACTORS -.-> F_TRIP
+    %% =========================================================================
+    %% LINAJE STAGING -> MARTS FACT TABLE
+    %% =========================================================================
+    S_TRIPS ==> F_TRIPS
+    S_PAYMENTS --> F_TRIPS
+    S_CANCELS --> F_TRIPS
+
+    %% =========================================================================
+    %% RELACIONES KIMBALL STAR SCHEMA (CONFORMED FOREIGN KEYS)
+    %% =========================================================================
+    D_ZONES -.-> F_TRIPS
+    D_CLIMA -.-> F_TRIPS
+    D_USERS -.-> F_TRIPS
+    D_DRIVERS -.-> F_TRIPS

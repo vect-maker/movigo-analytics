@@ -3,18 +3,18 @@ flowchart LR
     %% =========================================================================
     %% ESTILOS VISUALES Y CLASES
     %% =========================================================================
-    classDef default fill:#F8FAFC,stroke:#334155,stroke-width:1.8px,color:#0F172A,font-size:15px;
-    classDef p1 fill:#EFF6FF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,font-size:15px;
-    classDef p2 fill:#F8FAFC,stroke:#144E45,stroke-width:2px,color:#144E45,font-size:15px;
-    classDef p3 fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#78350F,font-size:15px;
-    classDef p4 fill:#FFF7ED,stroke:#EA580C,stroke-width:2px,color:#7C2D12,font-size:15px;
-    classDef p5 fill:#ECFDF5,stroke:#059669,stroke-width:2px,color:#064E3B,font-size:15px;
-    classDef p6 fill:#F0FDF4,stroke:#2A9D8F,stroke-width:2px,color:#144E45,font-size:15px;
+    classDef default fill:#F8FAFC,stroke:#334155,stroke-width:2px,color:#0F172A,font-size:16px;
+    classDef p1 fill:#EFF6FF,stroke:#2563EB,stroke-width:2.2px,color:#1E3A8A,font-size:16px;
+    classDef p2 fill:#F8FAFC,stroke:#144E45,stroke-width:2.2px,color:#144E45,font-size:16px;
+    classDef p3 fill:#FEF3C7,stroke:#D97706,stroke-width:2.2px,color:#78350F,font-size:16px;
+    classDef p4 fill:#FFF7ED,stroke:#EA580C,stroke-width:2.2px,color:#7C2D12,font-size:16px;
+    classDef p5 fill:#ECFDF5,stroke:#059669,stroke-width:2.2px,color:#064E3B,font-size:16px;
+    classDef p6 fill:#F0FDF4,stroke:#2A9D8F,stroke-width:2.2px,color:#144E45,font-size:16px;
 
     %% =========================================================================
     %% BLOQUE I: INGESTA, ALMACÉN Y MODELADO KIMBALL
     %% =========================================================================
-    subgraph S1 ["<b style='font-size:16px;'>I. INGESTA & TRANSFORMACIÓN MODULAR</b>"]
+    subgraph S1 ["<b style='font-size:17.5px;'>I. INGESTA & TRANSFORMACIÓN MODULAR</b>"]
         direction LR
         P1["<b>1. Ingesta API REST</b><br/>Buffer Parquet"]:::p1
         P2[("<b>2. Azure PostgreSQL</b><br/>Esquema Raw 3NF")]:::p2
@@ -25,7 +25,7 @@ flowchart LR
     %% =========================================================================
     %% BLOQUE II: MOTOR ANALÍTICO, INFERENCIA & DATAOPS
     %% =========================================================================
-    subgraph S2 ["<b style='font-size:16px;'>II. MOTOR ANALÍTICO, INFERENCIA & DATAOPS</b>"]
+    subgraph S2 ["<b style='font-size:17.5px;'>II. MOTOR ANALÍTICO, INFERENCIA & DATAOPS</b>"]
         direction LR
         P4[("<b>4. DuckDB OLAP</b><br/>Snapshot In-Process")]:::p4
         P5["<b>5. Modelado SGD & Dijkstra</b><br/>Inferencia Numérica"]:::p5

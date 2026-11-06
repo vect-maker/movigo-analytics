@@ -431,11 +431,20 @@ def plot_duration_model(model_results: dict[str, Any], output_path: Path) -> Non
         label="Ajuste Lineal (SGD)",
     )
 
-    plt.xlabel("Distancia del Viaje (kilómetros)", fontsize=10.5)
-    plt.ylabel("Duración del Viaje (minutos)", fontsize=10.5)
+    plt.xlabel("Distancia del Viaje (kilómetros)", fontsize=13.5, fontweight="bold", labelpad=8)
+    plt.ylabel("Duración del Viaje (minutos)", fontsize=13.5, fontweight="bold", labelpad=8)
+    plt.tick_params(axis="both", which="major", labelsize=12)
     plt.grid(True, linestyle=":", alpha=0.5)
 
-    plt.legend(loc="upper left", framealpha=0.92, fontsize=9.5)
+    # In-chart annotation box with modeled equation
+    formula_box = (
+        f"$\\mathbf{{ETA = {b0:.2f} + {b1:.2f} \\cdot d}}$\n"
+        f"$R^2 = {r2:.3f}$  |  $\\mathrm{{MAE}} = {mae:.2f}$ min"
+    )
+    props = dict(boxstyle="round,pad=0.55", facecolor="#f8fafc", edgecolor="#0284c7", linewidth=1.4, alpha=0.95)
+    plt.gca().text(0.04, 0.76, formula_box, transform=plt.gca().transAxes, fontsize=11.5, verticalalignment="top", bbox=props)
+
+    plt.legend(loc="upper left", framealpha=0.92, fontsize=11)
     plt.tight_layout()
     plt.savefig(output_path, dpi=300)
     plt.close()
@@ -482,11 +491,20 @@ def plot_fare_model(model_results: dict[str, Any], output_path: Path) -> None:
         label="Ajuste Lineal (SGD)",
     )
 
-    plt.xlabel("Distancia del Viaje (kilómetros)", fontsize=10.5)
-    plt.ylabel("Tarifa Final del Viaje (Córdobas - NIO)", fontsize=10.5)
+    plt.xlabel("Distancia del Viaje (kilómetros)", fontsize=13.5, fontweight="bold", labelpad=8)
+    plt.ylabel("Tarifa Final del Viaje (Córdobas - NIO)", fontsize=13.5, fontweight="bold", labelpad=8)
+    plt.tick_params(axis="both", which="major", labelsize=12)
     plt.grid(True, linestyle=":", alpha=0.5)
 
-    plt.legend(loc="upper left", framealpha=0.92, fontsize=9.5)
+    # In-chart annotation box with modeled equation
+    formula_box = (
+        f"$\\mathbf{{Tarifa = {b0:.2f} + {b1:.2f} \\cdot d}}$\n"
+        f"$R^2 = {r2:.3f}$  |  $\\mathrm{{MAE}} = {mae:.2f}$ NIO"
+    )
+    props = dict(boxstyle="round,pad=0.55", facecolor="#f8fafc", edgecolor="#059669", linewidth=1.4, alpha=0.95)
+    plt.gca().text(0.04, 0.76, formula_box, transform=plt.gca().transAxes, fontsize=11.5, verticalalignment="top", bbox=props)
+
+    plt.legend(loc="upper left", framealpha=0.92, fontsize=11)
     plt.tight_layout()
     plt.savefig(output_path, dpi=300)
     plt.close()

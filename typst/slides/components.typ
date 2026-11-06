@@ -483,6 +483,7 @@
   icon: none,
   stat: [],
   body: [],
+  formula: none,
   accent: color-title,
 ) = {
   block(
@@ -511,8 +512,19 @@
       )
       #v(4pt)
       #line(length: 100%, stroke: 0.5pt + color-card-stroke)
+      #if formula != none [
+        #v(3pt)
+        #block(
+          width: 100%,
+          fill: white,
+          stroke: 1pt + accent.lighten(40%),
+          radius: 6pt,
+          inset: (x: 8pt, y: 5.5pt),
+          align(center + horizon)[#formula]
+        )
+      ]
       #v(4pt)
-      #par(leading: 0.46em)[#text(size: 10.5pt, fill: color-body, font: font-body, body)]
+      #par(leading: 0.46em)[#text(size: 10.2pt, fill: color-body, font: font-body, body)]
     ]
   )
 }
@@ -523,6 +535,7 @@
   caption: [],
   stat: [],
   body: [],
+  formula: none,
   insights: (),
   icon: none,
   speaker: none,
@@ -556,7 +569,7 @@
       [
         #stack(
           spacing: 12pt,
-          analytical-card(icon: icon, stat: stat, body: body, accent: accent),
+          analytical-card(icon: icon, stat: stat, body: body, formula: formula, accent: accent),
           if insights.len() > 0 [
             #block(
               fill: color-card-bg,
