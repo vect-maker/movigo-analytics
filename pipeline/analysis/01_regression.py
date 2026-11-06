@@ -196,13 +196,8 @@ def create_sgd_pipeline() -> Pipeline:
     """Instantiates a normalized Stochastic Gradient Descent regression pipeline."""
     scaler = StandardScaler()
     sgd = SGDRegressor(
-        loss="squared_error",
         penalty=cast(Any, None),
-        max_iter=2000,
-        tol=1e-4,
         random_state=RANDOM_STATE,
-        eta0=0.01,
-        learning_rate="invscaling",
     )
     return Pipeline([("scaler", scaler), ("sgd", sgd)])
 
